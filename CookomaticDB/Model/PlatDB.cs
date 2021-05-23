@@ -237,6 +237,58 @@ namespace CookomaticDB.Model
         }
 
 
+        public static PlatDB GetPlatPerCodi(long pCodi)
+        {
+            PlatDB plat = null;
+            try
+            {
+                using (CookomaticDB context = new CookomaticDB())
+                {
+                    using (var connexio = context.Database.GetDbConnection())
+                    {
+                        connexio.Open();
+
+                        using (DbCommand consulta = connexio.CreateCommand())
+                        {
+                            // A) definir la consulta
+                            consulta.CommandText = "select * from plat where codi = @codi";
+                            DBUtils.crearParametre(consulta, "codi", System.Data.DbType.Int64, pCodi);
+
+                            // B) llançar la consulta
+                            DbDataReader reader = consulta.ExecuteReader();
+
+                            if (reader.Read())
+                            {
+                                long codi = reader.GetInt64(reader.GetOrdinal("codi"));
+                                string nom = reader.GetString(reader.GetOrdinal("nom"));
+
+                                string descripcioMD = "";
+                                if (!reader.IsDBNull(reader.GetOrdinal("descripcio_MD")))
+                                    descripcioMD = reader.GetString(reader.GetOrdinal("descripcio_md"));
+
+                                decimal preu = reader.GetDecimal(reader.GetOrdinal("preu"));
+                                bool disponible = reader.GetBoolean(reader.GetOrdinal("disponible"));
+
+                                // TODO: agafar foto de la bd
+                                //byte[] foto_ba;
+                                //DBUtils.LlegeixFoto(reader, out foto_ba, "foto");
+                                //ImageConvertor ic = new ImageConvertor();
+                                //Image foto = ic.ConvertByteArrayToImage(foto_ba);
+
+
+                                plat = new PlatDB(codi, nom, descripcioMD, preu, null, disponible, null);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                // deixar missatge al log
+            }
+            return plat;
+        }
 
         public bool Delete()
         {

@@ -90,6 +90,54 @@ namespace CookomaticDB.Model
             return null;
         }
 
+        public static ObservableCollection<LiniaComandaDB> GetLiniesPerCodiComanda(long codiComanda)
+        {
+            try
+            {
+                using (CookomaticDB context = new CookomaticDB())
+                {
+                    using (var connexio = context.Database.GetDbConnection())
+                    {
+                        connexio.Open();
+
+                        using (DbCommand consulta = connexio.CreateCommand())
+                        {
+                            // A) definir la consulta
+                            consulta.CommandText = "select * from linia_comanda where comanda = @comanda";
+                            DBUtils.crearParametre(consulta, "comanda", System.Data.DbType.Int64, codiComanda);
+
+                            // B) llançar la consulta
+                            DbDataReader reader = consulta.ExecuteReader();
+
+                            // C) recórrer els resultats de la consulta
+                            ObservableCollection<LiniaComandaDB> linies = new ObservableCollection<LiniaComandaDB>();
+                            while (reader.Read())
+                            {
+                                int numAux = reader.GetInt32(reader.GetOrdinal("num"));
+                                int qtatAux = reader.GetInt32(reader.GetOrdinal("quantitat"));
+                                string estatAux = reader.GetString(reader.GetOrdinal("estat"));
+                                var estat = (EstatLinia)Enum.Parse(typeof(EstatLinia), estatAux);
+
+                                // POC EFICIENT: una altra connexio
+                                PlatDB plat = PlatDB.GetPlatPerCodi(reader.GetInt64(reader.GetOrdinal("plat")));
+
+                                LiniaComandaDB linia = new LiniaComandaDB(numAux, qtatAux, estat, plat);
+                                linies.Add(linia);
+                            }
+                            return linies;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // deixar missatge al log
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+            }
+            return null;
+        }
+
         public static ObservableCollection<LiniaComandaDB> GetLiniesPerPlat(PlatDB plat)
         {
             try

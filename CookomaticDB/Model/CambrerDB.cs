@@ -39,59 +39,99 @@ namespace CookomaticDB.Model
         public string User { get => user; set => user = value; }
         public string Password { get => password; set => password = value; }
 
-        //public static ObservableCollection<CambrerDB> GetPlats()
-        //{
-        //    try
-        //    {
-        //        using (CookomaticDB context = new CookomaticDB())
-        //        {
-        //            using (var connexio = context.Database.GetDbConnection())
-        //            {
-        //                connexio.Open();
+        public static ObservableCollection<CambrerDB> GetCambrers()
+        {
+            try
+            {
+                using (CookomaticDB context = new CookomaticDB())
+                {
+                    using (var connexio = context.Database.GetDbConnection())
+                    {
+                        connexio.Open();
 
-        //                using (DbCommand consulta = connexio.CreateCommand())
-        //                {
-        //                    // A) definir la consulta
-        //                    consulta.CommandText = "select * from plat";
+                        using (DbCommand consulta = connexio.CreateCommand())
+                        {
+                            // A) definir la consulta
+                            consulta.CommandText = "select * from cambrer";
 
-        //                    // B) llançar la consulta
-        //                    DbDataReader reader = consulta.ExecuteReader();
+                            // B) llançar la consulta
+                            DbDataReader reader = consulta.ExecuteReader();
 
-        //                    // C) recórrer els resultats de la consulta
-        //                    ObservableCollection<CambrerDB> plats = new ObservableCollection<CambrerDB>();
-        //                    while (reader.Read())
-        //                    {
-        //                        long codi = reader.GetInt64(reader.GetOrdinal("codi"));
-        //                        string nom = reader.GetString(reader.GetOrdinal("nom"));
+                            // C) recórrer els resultats de la consulta
+                            ObservableCollection<CambrerDB> cambrers = new ObservableCollection<CambrerDB>();
+                            while (reader.Read())
+                            {
+                                long codi = reader.GetInt64(reader.GetOrdinal("codi"));
+                                string nom = reader.GetString(reader.GetOrdinal("nom"));
+                                string cognom1 = reader.GetString(reader.GetOrdinal("cognom1"));
+                                string cognom2 = "";
+                                if (!reader.IsDBNull(reader.GetOrdinal("cognom2")))
+                                    cognom2 = reader.GetString(reader.GetOrdinal("cognom2"));
+                                string user = reader.GetString(reader.GetOrdinal("user"));
+                                string password = reader.GetString(reader.GetOrdinal("password"));
 
-        //                        string descripcioMD = "";
-        //                        if (!reader.IsDBNull(reader.GetOrdinal("descripcio_MD")))
-        //                            descripcioMD = reader.GetString(reader.GetOrdinal("descripcio_md"));
+                                CambrerDB cambrer = new CambrerDB(codi, nom, cognom1, cognom2, user, password);
+                                cambrers.Add(cambrer);
+                            }
+                            return cambrers;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // deixar missatge al log
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+            }
+            return null;
+        }
 
-        //                        decimal preu = reader.GetDecimal(reader.GetOrdinal("preu"));
-        //                        bool disponible = reader.GetBoolean(reader.GetOrdinal("disponible"));
 
-        //                        // TODO: agafar foto de la bd
-        //                        //BitmapImage foto;
+        public static CambrerDB GetCambrerPerCodi(long pCodi)
+        {
+            CambrerDB cambrer = null;
+            try
+            {
+                using (CookomaticDB context = new CookomaticDB())
+                {
+                    using (var connexio = context.Database.GetDbConnection())
+                    {
+                        connexio.Open();
 
-        //                        //if (!reader.IsDBNull(reader.GetOrdinal("image_path")))
-        //                        //    image_path = reader.GetString(reader.GetOrdinal("image_path"));
+                        using (DbCommand consulta = connexio.CreateCommand())
+                        {
+                            // A) definir la consulta
+                            consulta.CommandText = "select * from cambrer where codi = @codi";
+                            DBUtils.crearParametre(consulta, "codi", System.Data.DbType.Int64, pCodi);
 
-        //                        CambrerDB plat = new CambrerDB(codi, nom, descripcioMD, preu, null, disponible);
-        //                        plats.Add(plat);
-        //                    }
-        //                    return plats;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // deixar missatge al log
-        //        Debug.WriteLine(ex.Message);
-        //        Debug.WriteLine(ex.StackTrace);
-        //    }
-        //    return null;
-        //}
+                            // B) llançar la consulta
+                            DbDataReader reader = consulta.ExecuteReader();
+
+                            if (reader.Read())
+                            {
+                                long codi = reader.GetInt64(reader.GetOrdinal("codi"));
+                                string nom = reader.GetString(reader.GetOrdinal("nom"));
+                                string cognom1 = reader.GetString(reader.GetOrdinal("cognom1"));
+                                string cognom2 = "";
+                                if (!reader.IsDBNull(reader.GetOrdinal("cognom2")))
+                                    cognom2 = reader.GetString(reader.GetOrdinal("cognom2"));
+                                string user = reader.GetString(reader.GetOrdinal("user"));
+                                string password = reader.GetString(reader.GetOrdinal("password"));
+
+                                cambrer = new CambrerDB(codi, nom, cognom1, cognom2, user, password);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+                // deixar missatge al log
+            }
+            return cambrer;
+        }
+
     }
 }

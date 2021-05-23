@@ -29,7 +29,7 @@ namespace GestioCarta
     /// <summary>
     /// Página vacía que se puede usar de forma independiente o a la que se puede navegar dentro de un objeto Frame.
     /// </summary>
-    public sealed partial class MainPage : Page
+    public sealed partial class CartaPage : Page
     {
         private ObservableCollection<CategoriaDB> llistaCategories;
         private ObservableCollection<PlatDB> llistaPlats;
@@ -50,7 +50,7 @@ namespace GestioCarta
         }
 
 
-        public MainPage()
+        public CartaPage()
         {
             this.InitializeComponent();
 

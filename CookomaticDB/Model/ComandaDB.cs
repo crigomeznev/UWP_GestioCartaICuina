@@ -15,13 +15,13 @@ namespace CookomaticDB.Model
         private DateTime data;
         private int taula;
         private CambrerDB cambrer;
-        private List<LiniaComandaDB> linies;
+        private ObservableCollection<LiniaComandaDB> linies;
 
         public ComandaDB()
         {
         }
 
-        public ComandaDB(long codi, DateTime data, int taula, CambrerDB cambrer, List<LiniaComandaDB> linies)
+        public ComandaDB(long codi, DateTime data, int taula, CambrerDB cambrer, ObservableCollection<LiniaComandaDB> linies)
         {
             Codi = codi;
             Data = data;
@@ -35,64 +35,78 @@ namespace CookomaticDB.Model
         public DateTime Data { get => data; set => data = value; }
         public int Taula { get => taula; set => taula = value; }
         public CambrerDB Cambrer { get => cambrer; set => cambrer = value; }
-        //public List<LiniaComandaDB> Linies { get => linies; set => linies = value; }
 
-        /*
-                public static ObservableCollection<ComandaDB> GetComandes()
+        public void AddLinia(LiniaComandaDB linia)
+        {
+            linies.Add(linia);
+        }
+
+        // retorna true si s'ha esborrat la linia, fals si no s'ha trobat
+        public bool RemoveLinia(LiniaComandaDB linia)
+        {
+            return linies.Remove(linia);
+        }
+
+        public IEnumerator<LiniaComandaDB> IteLinies()
+        {
+            foreach (LiniaComandaDB linia in linies)
+            {
+                yield return linia;
+            }
+            //yield return default(LiniaComandaDB);
+        }
+        public ObservableCollection<LiniaComandaDB> Linies { get => linies; set => linies = value; }
+
+        public static ObservableCollection<ComandaDB> GetComandes()
+        {
+            try
+            {
+                using (CookomaticDB context = new CookomaticDB())
                 {
-                    try
+                    using (var connexio = context.Database.GetDbConnection())
                     {
-                        using (CookomaticDB context = new CookomaticDB())
+                        connexio.Open();
+
+                        using (DbCommand consulta = connexio.CreateCommand())
                         {
-                            using (var connexio = context.Database.GetDbConnection())
+                            // A) definir la consulta
+                            consulta.CommandText = "select * from comanda";
+
+                            // B) llançar la consulta
+                            DbDataReader reader = consulta.ExecuteReader();
+
+                            // C) recórrer els resultats de la consulta
+                            ObservableCollection<ComandaDB> comandes = new ObservableCollection<ComandaDB>();
+                            while (reader.Read())
                             {
-                                connexio.Open();
+                                long codi = reader.GetInt64(reader.GetOrdinal("codi"));
+                                DateTime data = reader.GetDateTime(reader.GetOrdinal("data"));
 
-                                using (DbCommand consulta = connexio.CreateCommand())
-                                {
-                                    // A) definir la consulta
-                                    consulta.CommandText = "select * from plat";
+                                // POC EFICIENT: Obrim una nova connexió a la bd per anar a buscar el cambrer!
+                                long codiCambrer = reader.GetInt64(reader.GetOrdinal("cambrer"));
+                                CambrerDB cambrer = CambrerDB.GetCambrerPerCodi(codiCambrer);
 
-                                    // B) llançar la consulta
-                                    DbDataReader reader = consulta.ExecuteReader();
+                                // TODO: taula
+                                // POC EFICIENT: Obrim una nova connexió a la bd per anar a buscar el cambrer!
+                                ObservableCollection<LiniaComandaDB> linies = LiniaComandaDB.GetLiniesPerCodiComanda(codi);
 
-                                    // C) recórrer els resultats de la consulta
-                                    ObservableCollection<ComandaDB> plats = new ObservableCollection<ComandaDB>();
-                                    while (reader.Read())
-                                    {
-                                        long codi = reader.GetInt64(reader.GetOrdinal("codi"));
-                                        string nom = reader.GetString(reader.GetOrdinal("nom"));
 
-                                        string descripcioMD = "";
-                                        if (!reader.IsDBNull(reader.GetOrdinal("descripcio_MD")))
-                                            descripcioMD = reader.GetString(reader.GetOrdinal("descripcio_md"));
-
-                                        decimal preu = reader.GetDecimal(reader.GetOrdinal("preu"));
-                                        bool disponible = reader.GetBoolean(reader.GetOrdinal("disponible"));
-
-                                        // TODO: agafar foto de la bd
-                                        //BitmapImage foto;
-
-                                        //if (!reader.IsDBNull(reader.GetOrdinal("image_path")))
-                                        //    image_path = reader.GetString(reader.GetOrdinal("image_path"));
-
-                                        ComandaDB plat = new ComandaDB(codi, nom, descripcioMD, preu, null, disponible);
-                                        plats.Add(plat);
-                                    }
-                                    return plats;
-                                }
+                                ComandaDB comanda = new ComandaDB(codi, data, 0, cambrer, linies);
+                                comandes.Add(comanda);
                             }
+                            return comandes;
                         }
                     }
-                    catch (Exception ex)
-                    {
-                        // deixar missatge al log
-                        Debug.WriteLine(ex.Message);
-                        Debug.WriteLine(ex.StackTrace);
-                    }
-                    return null;
                 }
-        */
+            }
+            catch (Exception ex)
+            {
+                // deixar missatge al log
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+            }
+            return null;
+        }
 
         public decimal getBaseImposable()
         {
