@@ -6,6 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"        
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -69,10 +70,10 @@
                                     </StackPanel>
                                 </Grid>
 
-                                <Grid Grid.Column="2">
+                                <ScrollViewer Grid.Column="2">
                                     <controls:MarkdownTextBlock Grid.Row="2" Text="{Binding DescripcioMD}"
                                                                 TextWrapping="WrapWholeWords"></controls:MarkdownTextBlock>
-                                </Grid>
+                                </ScrollViewer>
                             </Grid>
                         </Border>
                     </DataTemplate>
@@ -148,14 +149,29 @@
             
             <TextBox Grid.Row="1" Grid.Column="1" x:Name="txbPlatNom" VerticalAlignment="Center" PlaceholderText="Nom del plat"></TextBox>
 
-            <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Grid Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
                 <!-- TODO: fer preu amb numericupdown -->
-                <TextBox x:Name="txbPlatPreu" PlaceholderText="Preu" VerticalAlignment="Center" Margin="20 0"></TextBox>
-                <CheckBox x:Name="chkDisponible" Content="Disponible"></CheckBox>
-            </StackPanel>
-            
-            <TextBox x:Name="txbPlatDescripcio" TextWrapping="Wrap"
-                     Grid.Row="3" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" PlaceholderText="Descripció del plat..."></TextBox>
+                <!--<muxc:NumberBox Value="{x:Bind Path=ViewModel.NumberBoxValue, Mode=TwoWay}"
+                    SmallChange="10"
+                    LargeChange="100"
+                    SpinButtonPlacementMode="Compact" />-->
+
+                <muxc:NumberBox x:Name="nbbPlatPreu" Grid.Column="0" HorizontalAlignment="Center"
+                                Header="Preu:" PlaceholderText="10,00" ValidationMode="InvalidInputOverwritten" Value="10.00"
+                                SmallChange="0.25" LargeChange="1" SpinButtonPlacementMode="Inline"/>
+
+                <CheckBox x:Name="chkDisponible" Content="Disponible" Grid.Column="1" HorizontalAlignment="Center"
+                          RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignRightWith="nbbPlatPreu"></CheckBox>
+            </Grid>
+
+            <ScrollViewer Grid.Row="3" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2">
+                <TextBox x:Name="txbPlatDescripcio" TextWrapping="Wrap" AcceptsReturn="True"
+                         PlaceholderText="Descripció del plat..."></TextBox>
+            </ScrollViewer>
             
             
         </Grid>

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Globalization.NumberFormatting;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Popups;
@@ -35,11 +36,25 @@ namespace GestioCarta
 
         //private Dictionary<long, PlatDB> llistaPlats;
 
+        private void SetNumberBoxNumberFormatter()
+        {
+            //IncrementNumberRounder rounder = new IncrementNumberRounder();
+            //rounder.Increment = 0.25;
+            //rounder.RoundingAlgorithm = RoundingAlgorithm.RoundUp;
+
+            DecimalFormatter formatter = new DecimalFormatter();
+            formatter.IntegerDigits = 1;
+            formatter.FractionDigits = 2;
+            //formatter.NumberRounder = rounder;
+            nbbPlatPreu.NumberFormatter = formatter;
+        }
+
 
         public MainPage()
         {
             this.InitializeComponent();
 
+            SetNumberBoxNumberFormatter();
             try
             {
                 llistaCategories = CategoriaDB.GetCategories();
@@ -131,8 +146,8 @@ namespace GestioCarta
             nouPlat.Nom = txbPlatNom.Text;
             nouPlat.DescripcioMD = txbPlatDescripcio.Text;
 
-            Decimal preu;
-            Decimal.TryParse(txbPlatPreu.Text, out preu);
+            Decimal preu = Convert.ToDecimal(nbbPlatPreu.Value);
+            //Decimal.TryParse(nbbPlatPreu.Value, out preu);
             nouPlat.Preu = preu;
             // TODO FOTO
             nouPlat.Foto = (BitmapImage)imgPlatFoto.Source;
