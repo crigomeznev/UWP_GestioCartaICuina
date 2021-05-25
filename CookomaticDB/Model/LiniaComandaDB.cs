@@ -2,15 +2,26 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data.Common;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace CookomaticDB.Model
 {
-    public class LiniaComandaDB
+    public class LiniaComandaDB : INotifyPropertyChanged
     {
+        // INotifyPropertyChanged
+        #region INotifyPropertyChanged
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void RaisePropertyChange([CallerMemberName] string propertyname = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyname));
+        }
+        #endregion
+
         private int num;
         private int quantitat;
         private EstatLinia estat;
@@ -30,7 +41,17 @@ namespace CookomaticDB.Model
 
         public int Num { get => num; set => num = value; }
         public int Quantitat { get => quantitat; set => quantitat = value; }
-        public EstatLinia Estat { get => estat; set => estat = value; }
+        public EstatLinia Estat
+        {
+            get => estat;
+            set 
+            { 
+                estat = value;
+
+                RaisePropertyChange();
+                //RaisePropertyChange("Estat");
+            }
+        }
         public PlatDB Item { get => item; set => item = value; }
 
         public static ObservableCollection<LiniaComandaDB> GetLinies()
@@ -103,7 +124,7 @@ namespace CookomaticDB.Model
                         using (DbCommand consulta = connexio.CreateCommand())
                         {
                             // A) definir la consulta
-                            consulta.CommandText = "select * from linia_comanda where comanda = @comanda";
+                            consulta.CommandText = "select * from linia_comanda where comanda = @comanda order by estat";
                             DBUtils.crearParametre(consulta, "comanda", System.Data.DbType.Int64, codiComanda);
 
                             // B) llançar la consulta

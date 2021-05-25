@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Text;
@@ -9,13 +10,30 @@ using Windows.UI.Xaml.Media.Imaging;
 
 namespace CookomaticDB.Model
 {
-    public class ComandaDB
+    public class ComandaDB : INotifyPropertyChanged
     {
         private long codi;
         private DateTime data;
         private int taula;
         private CambrerDB cambrer;
         private ObservableCollection<LiniaComandaDB> linies;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        // HAURIA D'ANAR EN UN VIEWMODEL!!!
+        // Ens registrem  a l'event property changed 
+        // Si l'objecte Actor és modificat (via binding de la interfície
+        // gràfica ), ens avisarà.
+        //    Actor.PropertyChanged += Actor_PropertyChanged;
+        //    }
+
+        //private void Actor_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        //{
+        //    if (EstatForm == Estat.SENSE_CANVIS)
+        //    {
+        //        EstatForm = Estat.MODIFICAT;
+        //    }
+        //}
 
         public ComandaDB()
         {
@@ -29,6 +47,8 @@ namespace CookomaticDB.Model
             Cambrer = cambrer;
             //Linies = linies;
             this.linies = linies;
+
+            //this.linies.property
         }
 
         public long Codi { get => codi; set => codi = value; }
@@ -70,7 +90,7 @@ namespace CookomaticDB.Model
                         using (DbCommand consulta = connexio.CreateCommand())
                         {
                             // A) definir la consulta
-                            consulta.CommandText = "select * from comanda";
+                            consulta.CommandText = "select * from comanda order by data desc";
 
                             // B) llançar la consulta
                             DbDataReader reader = consulta.ExecuteReader();

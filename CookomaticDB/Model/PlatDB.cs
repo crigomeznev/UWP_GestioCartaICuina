@@ -16,22 +16,35 @@ namespace CookomaticDB.Model
         private string nom;
         private string descripcioMD;
         private decimal preu;
-        private BitmapImage foto;
-        private Image foto2;
+        //private Image foto2;
         private bool disponible;
         private CategoriaDB categoria;
+        private byte[] foto;
+        //private BitmapImage fotoBi;
 
-        public PlatDB(long codi, string nom, string descripcioMD, decimal preu, BitmapImage foto, bool disponible, CategoriaDB categoria)
+        public PlatDB(long codi, string nom, string descripcioMD, decimal preu, bool disponible, CategoriaDB categoria, byte[] foto)
         {
             Codi = codi;
             Nom = nom;
             DescripcioMD = descripcioMD;
             Preu = preu;
-            Foto = foto;
             Disponible = disponible;
             Categoria = categoria;
+            Foto = foto;
         }
-        
+
+
+        //public PlatDB(long codi, string nom, string descripcioMD, decimal preu, BitmapImage foto, bool disponible, CategoriaDB categoria)
+        //{
+        //    Codi = codi;
+        //    Nom = nom;
+        //    DescripcioMD = descripcioMD;
+        //    Preu = preu;
+        //    FotoBi = foto;
+        //    Disponible = disponible;
+        //    Categoria = categoria;
+        //}
+
         //public PlatDB(long codi, string nom, string descripcioMD, decimal preu, Image foto2, bool disponible, CategoriaDB categoria)
         //{
         //    Codi = codi;
@@ -51,10 +64,10 @@ namespace CookomaticDB.Model
         public string Nom { get => nom; set => nom = value; }
         public string DescripcioMD { get => descripcioMD; set => descripcioMD = value; }
         public decimal Preu { get => preu; set => preu = value; }
-        public BitmapImage Foto { get => foto; set => foto = value; }
         public bool Disponible { get => disponible; set => disponible = value; }
         public CategoriaDB Categoria { get => categoria; set => categoria = value; }
-        public Image Foto2 { get => foto2; set => foto2 = value; }
+        public byte[] Foto { get => foto; set => foto = value; }
+        //public BitmapImage FotoBi { get => fotoBi; set => fotoBi = value; }
 
         //private List<LiniaEscandall> escandall;
 
@@ -99,7 +112,11 @@ namespace CookomaticDB.Model
                                 //Image foto = ic.ConvertByteArrayToImage(foto_ba);
 
 
-                                PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, null, disponible, null);
+                                byte[] foto;
+                                DBUtils.LlegeixFoto(reader, out foto, "foto");
+
+                                PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, disponible, null, foto);
+                                //PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, null, disponible, null);
                                 plats.Add(plat);
                             }
                             return plats;
@@ -158,7 +175,11 @@ namespace CookomaticDB.Model
                                 //ImageConvertor ic = new ImageConvertor();
                                 //Image foto = ic.ConvertByteArrayToImage(foto_ba);
 
-                                PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, null, disponible, null);
+                                byte[] foto;
+                                DBUtils.LlegeixFoto(reader, out foto, "foto");
+
+                                PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, disponible, null, foto);
+                                //PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, null, disponible, null);
                                 plats.Add(plat);
                             }
                             return plats;
@@ -212,14 +233,11 @@ namespace CookomaticDB.Model
                                 decimal preu = reader.GetDecimal(reader.GetOrdinal("preu"));
                                 bool disponible = reader.GetBoolean(reader.GetOrdinal("disponible"));
 
-                                // TODO: agafar foto de la bd
-                                //byte[] foto_ba;
-                                //DBUtils.LlegeixFoto(reader, out foto_ba, "foto");
-                                //ImageConvertor ic = new ImageConvertor();
-                                //Image foto = ic.ConvertByteArrayToImage(foto_ba);
+                                byte[] foto;
+                                DBUtils.LlegeixFoto(reader, out foto, "foto");
 
-
-                                PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, null, disponible, null);
+                                PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, disponible, null, foto);
+                                //PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, null, disponible, null);
                                 plats.Add(plat);
                             }
                             return plats;
@@ -276,7 +294,10 @@ namespace CookomaticDB.Model
                                 //Image foto = ic.ConvertByteArrayToImage(foto_ba);
 
 
-                                plat = new PlatDB(codi, nom, descripcioMD, preu, null, disponible, null);
+                                byte[] foto;
+                                DBUtils.LlegeixFoto(reader, out foto, "foto");
+
+                                plat = new PlatDB(codi, nom, descripcioMD, preu, disponible, null, foto);
                             }
                         }
                     }
@@ -288,6 +309,119 @@ namespace CookomaticDB.Model
                 // deixar missatge al log
             }
             return plat;
+        }
+
+
+
+
+
+
+        #region DML
+        public bool Insert()
+        {
+            DbTransaction trans = null;
+            try
+            {
+                using (CookomaticDB context = new CookomaticDB())
+                {
+                    using (var connexio = context.Database.GetDbConnection())
+                    {
+                        connexio.Open();
+                        using (DbCommand consulta = connexio.CreateCommand())
+                        {
+                            trans = connexio.BeginTransaction();
+                            consulta.Transaction = trans;
+                            // A) definir la consulta
+
+
+                            consulta.CommandText = $@"
+                                INSERT INTO PLAT (NOM, DESCRIPCIO_MD, PREU, FOTO, DISPONIBLE, CATEGORIA)
+                                VALUES (@nom, @descripcioMD, @preu, @foto, @disponible, @categoria);
+                            ";
+
+
+                            DBUtils.crearParametre(consulta, "nom", System.Data.DbType.String, this.Nom);
+                            DBUtils.crearParametre(consulta, "descripcioMD", System.Data.DbType.String, this.DescripcioMD);
+                            DBUtils.crearParametre(consulta, "preu", System.Data.DbType.Decimal, this.Preu);
+                            //DBUtils.crearParametre(consulta, "foto", System.Data.DbType.Object, this.FotoBi);
+                            DBUtils.crearParametre(consulta, "foto", System.Data.DbType.Binary, this.Foto);
+                            DBUtils.crearParametre(consulta, "disponible", System.Data.DbType.Boolean, this.Disponible);
+                            DBUtils.crearParametre(consulta, "categoria", System.Data.DbType.Int64, this.Categoria.Codi);
+
+                            // B) llançar la consulta
+                            int filesAfectades = consulta.ExecuteNonQuery();
+                            if (filesAfectades != 1)
+                            {
+                                trans.Rollback();
+                            }
+                            else
+                            {
+                                trans.Commit();
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Deixar registre al log (coming soon)
+                Debug.WriteLine(ex);
+            }
+
+            return false;
+        }
+
+        public bool Update()
+        {
+            DbTransaction trans = null;
+            try
+            {
+                using (CookomaticDB context = new CookomaticDB())
+                {
+                    using (var connexio = context.Database.GetDbConnection())
+                    {
+                        connexio.Open();
+                        using (DbCommand consulta = connexio.CreateCommand())
+                        {
+                            trans = connexio.BeginTransaction();
+                            consulta.Transaction = trans;
+                            // No deixarem modificar del plat: Codi i categoria
+
+                            consulta.CommandText = $@"
+                                    UPDATE PLAT
+                                    SET NOM = @NOM, DESCRIPCIO_MD = @DESCRIPCIO_MD, PREU = @PREU, FOTO = @FOTO, DISPONIBLE = @DISPONIBLE
+                                    WHERE CODI = @CODI";
+                            DBUtils.crearParametre(consulta, "NOM", System.Data.DbType.String, this.Nom);
+                            DBUtils.crearParametre(consulta, "DESCRIPCIO_MD", System.Data.DbType.String, this.DescripcioMD);
+                            DBUtils.crearParametre(consulta, "PREU", System.Data.DbType.Decimal, this.Preu);
+                            DBUtils.crearParametre(consulta, "FOTO", System.Data.DbType.Binary, this.Foto);
+                            DBUtils.crearParametre(consulta, "DISPONIBLE", System.Data.DbType.String, this.Disponible);
+                            DBUtils.crearParametre(consulta, "CODI", System.Data.DbType.Int64, this.Codi);
+
+                            // B) llançar la consulta
+                            int filesAfectades = consulta.ExecuteNonQuery();
+                            if (filesAfectades != 1)
+                            {
+                                trans.Rollback();
+                            }
+                            else
+                            {
+                                trans.Commit();
+                                return true;
+                            }
+
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Deixar registre al log (coming soon)
+                Debug.WriteLine(ex);
+            }
+
+            return false;
         }
 
         public bool Delete()
@@ -330,59 +464,6 @@ namespace CookomaticDB.Model
             }
             return false;
         }
-
-        public bool Insert()
-        {
-            DbTransaction trans = null;
-            try
-            {
-                using (CookomaticDB context = new CookomaticDB())
-                {
-                    using (var connexio = context.Database.GetDbConnection())
-                    {
-                        connexio.Open();
-                        using (DbCommand consulta = connexio.CreateCommand())
-                        {
-                            trans = connexio.BeginTransaction();
-                            consulta.Transaction = trans;
-                            // A) definir la consulta
-
-
-                            consulta.CommandText = $@"
-                                INSERT INTO PLAT (NOM, DESCRIPCIO_MD, PREU, FOTO, DISPONIBLE, CATEGORIA)
-                                VALUES (@nom, @descripcioMD, @preu, @foto, @disponible, @categoria);
-                            ";
-
-
-                            DBUtils.crearParametre(consulta, "nom", System.Data.DbType.String, this.Nom);
-                            DBUtils.crearParametre(consulta, "descripcioMD", System.Data.DbType.String, this.DescripcioMD);
-                            DBUtils.crearParametre(consulta, "preu", System.Data.DbType.Decimal, this.Preu);
-                            DBUtils.crearParametre(consulta, "foto", System.Data.DbType.Object, this.Foto);
-                            DBUtils.crearParametre(consulta, "disponible", System.Data.DbType.Boolean, this.Disponible);
-                            DBUtils.crearParametre(consulta, "categoria", System.Data.DbType.Int64, this.Categoria.Codi);
-
-                            // B) llançar la consulta
-                            int filesAfectades = consulta.ExecuteNonQuery();
-                            if (filesAfectades != 1)
-                            {
-                                trans.Rollback();
-                            }
-                            else
-                            {
-                                trans.Commit();
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Deixar registre al log (coming soon)
-            }
-
-            return false;
-        }
-
+        #endregion
     }
 }

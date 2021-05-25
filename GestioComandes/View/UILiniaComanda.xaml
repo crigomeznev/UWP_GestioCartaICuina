@@ -1,0 +1,31 @@
+﻿<UserControl
+    x:Class="GestioComandes.View.UILiniaComanda"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GestioComandes.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    x:Name="ucLiniaComanda">
+    <UserControl.Resources>
+        <!--<local:EstatLiniaToBoolConverter x:Key="EstatLiniaToBoolConverter"></local:EstatLiniaToBoolConverter>-->
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="{Binding ElementName=ucLiniaComanda, Path=PQuantitat}" Grid.Column="0"></TextBlock>
+        <TextBlock Text="x" Grid.Column="1"></TextBlock>
+        <TextBlock Text="{Binding ElementName=ucLiniaComanda, Path=PPlat.Nom}" Grid.Column="2"></TextBlock>
+        <!--<CheckBox Content="Estat" IsChecked="{Binding ElementName=ucLiniaComanda, Path=PEstat, Converter={StaticResource EstatLiniaToBoolConverter}, Mode=TwoWay}"
+                                                      Grid.Column="3" Checked="CheckBox_Checked"></CheckBox>-->
+
+    </Grid>
+</UserControl>

@@ -119,10 +119,17 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\EstatLiniaToBoolConverter.cs" />
     <Compile Include="ComandesPage.xaml.cs">
       <DependentUpon>ComandesPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="View\UIComanda.xaml.cs">
+      <DependentUpon>UIComanda.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UILiniaComanda.xaml.cs">
+      <DependentUpon>UILiniaComanda.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -147,6 +154,14 @@
     <Page Include="ComandesPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UIComanda.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\UILiniaComanda.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
