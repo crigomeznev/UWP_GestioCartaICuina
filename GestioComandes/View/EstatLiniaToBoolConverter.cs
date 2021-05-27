@@ -29,16 +29,23 @@ namespace GestioComandes.View
             {
                 Debug.WriteLine(e.Message);
             }
-
-
             return null;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
-            return null;
+            bool val = (bool)value;
+            EstatLinia estat;
+            if (val) estat = EstatLinia.PREPARADA;
+            else estat = EstatLinia.EN_PREPARACIO;
+
+            return estat;
         }
 
+
+
+
+        // TODO BORRAR
         public async Task<object> ConvertAsync(object value, Type targetType, object parameter, string language)
         {
             try

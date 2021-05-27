@@ -18,7 +18,9 @@ namespace GestioComandes.View
         private int taula;
         //private CambrerDB cambrer;
         private ComandaDB comandaOriginal;
-        //private ObservableCollection<LiniaComandaDB> linies;
+        private ObservableCollection<LiniaComandaViewModel> linies = new ObservableCollection<LiniaComandaViewModel>();
+
+        private bool finalitzada;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -71,8 +73,48 @@ namespace GestioComandes.View
                 Codi = comandaOriginal.Codi;
                 Data = comandaOriginal.Data;
                 Taula = comandaOriginal.Taula;
+
+                // Finalitzada: camp calculat -> aprofitem aquest bucle per calcular-lo
+                finalitzada = true;
+
+                // reassignem linies
+                Linies.Clear();
+                foreach(LiniaComandaDB liniaDB in comandaOriginal.Linies)
+                {
+                    LiniaComandaViewModel lcvm = new LiniaComandaViewModel(liniaDB);
+                    lcvm.PropertyChanged += LiniaComandaVM_PropertyChanged;
+
+                    Linies.Add(new LiniaComandaViewModel(liniaDB));
+
+                    // a la que trobem una línia EN_PREPARACIO, comanda.FINALITZADA passa a fals
+                    if (lcvm.Estat.Equals(EstatLinia.EN_PREPARACIO))
+                        finalitzada = false;
+                }
             }
         }
+
+        private void LiniaComandaVM_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            //throw new NotImplementedException();
+            // qui ha llançat l'esdeveniment
+            LiniaComandaViewModel lcvm = (LiniaComandaViewModel)sender;
+            Debug.WriteLine("Linia comanda property changed");
+            Debug.WriteLine(lcvm.LiniaComandaOriginal);
+        }
+
+        public ObservableCollection<LiniaComandaViewModel> Linies { get => linies; set => linies = value; }
+
+        // Camp calculat
+        public bool Finalitzada
+        {
+            get => finalitzada;
+            //set 
+            //{ 
+            //    finalitzada = value;
+            //    //ComandaOriginal.Finalitzada = value;
+            //}
+        }
+
         public decimal getBaseImposable()
         {
             return 0;
@@ -80,6 +122,20 @@ namespace GestioComandes.View
         public decimal getIVA()
         {
             return 0;
+        }
+
+
+
+        public void ActualitzarComandaDB()
+        {
+            try
+            {
+                ComandaOriginal.Update();
+            } catch (Exception ex)
+            {
+                // TODO: messagebox on es vegi error
+                Debug.WriteLine(ex);
+            }
         }
 
 

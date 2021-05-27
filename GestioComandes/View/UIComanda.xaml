@@ -9,9 +9,16 @@
     d:DesignHeight="300"
     d:DesignWidth="400"
     x:Name="ucComanda">
+    <!--Loaded="ucComanda_Loaded">-->
+
+    <UserControl.Resources>
+        <local:BoolToVisibility x:Key="BoolToVisibility"></local:BoolToVisibility>
+    </UserControl.Resources>
+
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
@@ -22,27 +29,40 @@
         <StackPanel Grid.Row="1" Orientation="Vertical" Padding="10">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Taula " FontSize="20"></TextBlock>
-                <TextBlock Text="{Binding ElementName=ucComanda, Path=PComandaDB.Taula}" FontSize="20" FontWeight="Bold"></TextBlock>
+                <TextBlock Text="{Binding ElementName=ucComanda, Path=PComandaVM.ComandaOriginal.Taula}" FontSize="20" FontWeight="Bold"></TextBlock>
             </StackPanel>
             <StackPanel Orientation="Vertical">
                 <!-- todo converter perque nomes es vegi hora de comanda -->
                 <TextBlock Text="{Binding ElementName=ucComanda, Path=PData}"></TextBlock>
-                <TextBlock Text="{Binding ElementName=ucComanda, Path=PComandaDB.Cambrer.Nom}"></TextBlock>
+                <TextBlock Text="{Binding ElementName=ucComanda, Path=PComandaVM.ComandaOriginal.Cambrer.Nom}"></TextBlock>
+                <TextBlock Text="Finalitzada:"></TextBlock>
+                <TextBlock Text="{Binding ElementName=ucComanda, Path=PComandaVM.Finalitzada}" FontSize="20" FontWeight="Bold"></TextBlock>
             </StackPanel>
         </StackPanel>
 
+        <!-- MARCAR COM A FINALITZADA -->
+        <Grid Grid.Row="2" x:Name="grdConfirmacio"
+            Visibility="{Binding ElementName=ucComanda, Path=PComandaVM.Finalitzada, Converter={StaticResource BoolToVisibility}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Text="Totes les línies = PREPARADES" Grid.Row="0"></TextBlock>
+            <Button x:Name="btnFinalitzarComanda" Click="btnFinalitzarComanda_Click"
+                    Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    Content="FINALITZAR" FontSize="20" FontWeight="Bold" Padding="20"></Button>
+        </Grid>
 
         <!--línies de comanda-->
-        
-        
-        
-        <ListView ItemsSource="{Binding ElementName=ucComanda, Path=PComandaDB.Linies}" Grid.Row="2" Background="Yellow">
+        <ListView ItemsSource="{Binding ElementName=ucComanda, Path=PComandaVM.Linies}" Grid.Row="3" Background="Yellow" x:Name="lsvLinies">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <local:UILiniaComanda></local:UILiniaComanda>
+                    <local:UILiniaComanda PLiniaComandaVM="{Binding}"></local:UILiniaComanda>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
+        
 
     </Grid>
 </UserControl>

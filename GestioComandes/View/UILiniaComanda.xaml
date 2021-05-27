@@ -10,7 +10,7 @@
     d:DesignWidth="400"
     x:Name="ucLiniaComanda">
     <UserControl.Resources>
-        <!--<local:EstatLiniaToBoolConverter x:Key="EstatLiniaToBoolConverter"></local:EstatLiniaToBoolConverter>-->
+        <local:EstatLiniaToBoolConverter x:Key="EstatLiniaToBoolConverter"></local:EstatLiniaToBoolConverter>
     </UserControl.Resources>
 
     <Grid>
@@ -21,11 +21,11 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="{Binding ElementName=ucLiniaComanda, Path=PQuantitat}" Grid.Column="0"></TextBlock>
+        <TextBlock Text="{Binding ElementName=ucLiniaComanda, Path=PLiniaComandaVM.LiniaComandaOriginal.Quantitat}" Grid.Column="0"></TextBlock>
         <TextBlock Text="x" Grid.Column="1"></TextBlock>
-        <TextBlock Text="{Binding ElementName=ucLiniaComanda, Path=PPlat.Nom}" Grid.Column="2"></TextBlock>
-        <!--<CheckBox Content="Estat" IsChecked="{Binding ElementName=ucLiniaComanda, Path=PEstat, Converter={StaticResource EstatLiniaToBoolConverter}, Mode=TwoWay}"
-                                                      Grid.Column="3" Checked="CheckBox_Checked"></CheckBox>-->
+        <TextBlock Text="{Binding ElementName=ucLiniaComanda, Path=PLiniaComandaVM.LiniaComandaOriginal.Item.Nom}" Grid.Column="2"></TextBlock>
+        <CheckBox Content="Estat" IsChecked="{Binding ElementName=ucLiniaComanda, Path=PLiniaComandaVM.Estat, Converter={StaticResource EstatLiniaToBoolConverter}, Mode=TwoWay}"
+                                                      Grid.Column="3"></CheckBox>
 
     </Grid>
 </UserControl>

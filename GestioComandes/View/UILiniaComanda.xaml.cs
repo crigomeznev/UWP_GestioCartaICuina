@@ -108,5 +108,19 @@ namespace GestioComandes.View
 
 
 
+        #region PLiniaComandaVM
+        public LiniaComandaViewModel PLiniaComandaVM
+        {
+            get { return (LiniaComandaViewModel)GetValue(PLiniaComandaVMProperty); }
+            set { SetValue(PLiniaComandaVMProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PLiniaComandaVM.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PLiniaComandaVMProperty =
+            DependencyProperty.Register("PLiniaComandaVM", typeof(LiniaComandaViewModel), typeof(UILiniaComanda), new PropertyMetadata(new LiniaComandaViewModel()));
+        #endregion
+
+
+
     }
 }

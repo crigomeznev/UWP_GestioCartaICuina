@@ -58,57 +58,61 @@ namespace GestioComandes
             this.InitializeComponent();
 
             // Crida a la BD
-            comandes = ComandaDB.GetComandes();
+            comandes = ComandaDB.GetComandesPerFinalitzada(false);
             iniComandesVM();
             //PComandes = comandes;
 
-            foreach (ComandaDB com in comandes)
-            {
-                UIComanda uic = new UIComanda(com);
-                //uic.PComandaDB = com;
-                comandesUI.Add(uic);
-            }
+            //foreach (ComandaDB com in comandes)
+            //{
+            //    UIComanda uic = new UIComanda(com);
+            //    //uic.PComandaDB = com;
+            //    comandesUI.Add(uic);
+            //}
 
             //and update the UI afterwards:
 
             // Actualitzar UI
             //lsvComandes.ItemsSource = comandesUI;
-            lsvComandes.ItemsSource = comandesVM;
+            //lsvComandes.ItemsSource = comandesVM;
 
 
-            ComandaDB comanda = ComandaDB.GetComandes()[0];
-            provaUIComanda.PComandaDB = comanda;
+            //ComandaDB comanda = ComandaDB.GetComandes()[0];
+            //provaUIComanda.PComandaDB = comanda;
 
-            foreach(ComandaDB com1 in comandes)
-            {
-                UIComanda uic = new UIComanda(com1);
-                uic.Width = 50;
-                stkComandesUI.Children.Add(uic);
-            }
+            //foreach(ComandaDB com1 in comandes)
+            //{
+            //    UIComanda uic = new UIComanda(com1);
+            //    uic.Width = 50;
+            //    stkComandesUI.Children.Add(uic);
+            //}
 
 
             // task que refrescarà la pàgina cada 2 segons
-            //_timer = new Timer(new TimerCallback((obj) => RefrescarPagina()), null, 0, 2000);
+            _timer = new Timer(new TimerCallback((obj) => RefrescarPagina()), null, 0, 2000);
         }
 
         private void iniComandesVM()
         {
+            comandesVM.Clear();
             foreach(ComandaDB comandaDB in comandes)
             {
-                comandesVM.Add(new ComandaViewModel(comandaDB));
+                ComandaViewModel comandaVM = new ComandaViewModel(comandaDB);
+
+                comandesVM.Add(comandaVM);
+                //foreach(LiniaComandaViewModel lcvm in coman)
             }
         }
 
         private async void RefrescarPagina()
         {
             // Crida a la BD
-            comandes = ComandaDB.GetComandes();
+            comandes = ComandaDB.GetComandesPerFinalitzada(false);
             //PComandes = comandes;
 
-            foreach (ComandaDB com in comandes)
-            {
-                comandesUI.Add(new UIComanda());
-            }
+            //foreach (ComandaDB com in comandes)
+            //{
+            //    comandesUI.Add(new UIComanda());
+            //}
 
             //and update the UI afterwards:
 
@@ -116,9 +120,10 @@ namespace GestioComandes
             await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal,
             () =>
             {
+                iniComandesVM();
                 // Your UI update code goes here!
                 //txt.Text = dd++.ToString();
-                lsvComandes.ItemsSource = comandes;
+                lsvComandes.ItemsSource = comandesVM;
             });
         }
 

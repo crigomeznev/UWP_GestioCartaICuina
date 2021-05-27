@@ -26,11 +26,6 @@ namespace GestioComandes.View
             this.InitializeComponent();
         }
 
-        public UIComanda(ComandaDB pComandaDB)
-        {
-            PComandaDB = pComandaDB;
-            this.InitializeComponent();
-        }
 
 
         /*
@@ -58,40 +53,44 @@ namespace GestioComandes.View
         }
         private void PComandaVMChangedCallback()
         {
-            PCodi = PComandaDB.Codi;
-            PData = PComandaDB.Data;
-            PTaula = PComandaDB.Taula;
-            PCambrer = PComandaDB.Cambrer;
-            PLinies = PComandaDB.Linies;
+            PCodi = PComandaVM.Codi;
+            PData = PComandaVM.Data;
+            PTaula = PComandaVM.Taula;
+
+            if (PComandaVM.ComandaOriginal != null)
+            {
+                PCambrer = PComandaVM.ComandaOriginal.Cambrer;
+                PLinies = PComandaVM.ComandaOriginal.Linies;
+            }
         }
         #endregion
 
 
 
         #region PComandaDB
-        public ComandaDB PComandaDB
-        {
-            get { return (ComandaDB)GetValue(PComandaDBProperty); }
-            set { SetValue(PComandaDBProperty, value); }
-        }
+        //public ComandaDB PComandaDB
+        //{
+        //    get { return (ComandaDB)GetValue(PComandaDBProperty); }
+        //    set { SetValue(PComandaDBProperty, value); }
+        //}
 
-        // Using a DependencyProperty as the backing store for PComandaDB.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty PComandaDBProperty =
-            DependencyProperty.Register("PComandaDB", typeof(ComandaDB), typeof(UIComanda), new PropertyMetadata(new ComandaDB(), PComandaDBChangedCallbackStatic));
+        //// Using a DependencyProperty as the backing store for PComandaDB.  This enables animation, styling, binding, etc...
+        //public static readonly DependencyProperty PComandaDBProperty =
+        //    DependencyProperty.Register("PComandaDB", typeof(ComandaDB), typeof(UIComanda), new PropertyMetadata(new ComandaDB(), PComandaDBChangedCallbackStatic));
 
-        private static void PComandaDBChangedCallbackStatic(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            UIComanda ui = (UIComanda)d;
-            ui.PComandaDBChangedCallback();
-        }
-        private void PComandaDBChangedCallback()
-        {
-            PCodi = PComandaDB.Codi;
-            PData = PComandaDB.Data;
-            PTaula = PComandaDB.Taula;
-            PCambrer = PComandaDB.Cambrer;
-            PLinies = PComandaDB.Linies;
-        }
+        //private static void PComandaDBChangedCallbackStatic(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        //{
+        //    UIComanda ui = (UIComanda)d;
+        //    ui.PComandaDBChangedCallback();
+        //}
+        //private void PComandaDBChangedCallback()
+        //{
+        //    PCodi = PComandaDB.Codi;
+        //    PData = PComandaDB.Data;
+        //    PTaula = PComandaDB.Taula;
+        //    PCambrer = PComandaDB.Cambrer;
+        //    PLinies = PComandaDB.Linies;
+        //}
         #endregion
 
 
@@ -138,7 +137,7 @@ namespace GestioComandes.View
         #endregion
 
 
-
+        // TODO BORRAR
         #region PCambrer
         public CambrerDB PCambrer
         {
@@ -152,7 +151,7 @@ namespace GestioComandes.View
         #endregion
 
 
-
+        // TODO BORRAR
         #region PLinies
         public ObservableCollection<LiniaComandaDB> PLinies
         {
@@ -168,5 +167,40 @@ namespace GestioComandes.View
 
 
 
+
+        #region PLiniesVM
+        public ObservableCollection<LiniaComandaViewModel> PLiniesVM
+        {
+            get { return (ObservableCollection<LiniaComandaViewModel>)GetValue(PLiniesVMProperty); }
+            set { SetValue(PLiniesVMProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PLiniesVM.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PLiniesVMProperty =
+            DependencyProperty.Register("PLiniesVM", typeof(ObservableCollection<LiniaComandaViewModel>), typeof(UIComanda),
+                new PropertyMetadata(new ObservableCollection<LiniaComandaViewModel>()));
+        #endregion
+
+
+        private void btnFinalitzarComanda_Click(object sender, RoutedEventArgs e)
+        {
+            //this.PComandaVM.Finalitzada = true;
+            //PComandaVM.Finalitzada = true;
+
+            // Millorar:
+            PComandaVM.ComandaOriginal.Finalitzada = true;
+
+            PComandaVM.ActualitzarComandaDB();
+
+        }
+
+        //private void ucComanda_Loaded(object sender, RoutedEventArgs e)
+        //{
+        //    // amagar llista si ja no hi ha linies pendents
+        //    if (PComandaVM.Finalitzada)
+        //    {
+        //        grdConfirmacio.Visibility = Visibility.Visible;
+        //    }
+        //}
     }
 }

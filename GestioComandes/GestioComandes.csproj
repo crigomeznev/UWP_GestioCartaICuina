@@ -120,6 +120,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\ComandaViewModel.cs" />
+    <Compile Include="ViewModel\LiniaComandaViewModel.cs" />
+    <Compile Include="View\BoolToVisibility.cs" />
     <Compile Include="View\EstatLiniaToBoolConverter.cs" />
     <Compile Include="ComandesPage.xaml.cs">
       <DependentUpon>ComandesPage.xaml</DependentUpon>
