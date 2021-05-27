@@ -119,6 +119,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\ComandaViewModel.cs" />
     <Compile Include="View\EstatLiniaToBoolConverter.cs" />
     <Compile Include="ComandesPage.xaml.cs">
       <DependentUpon>ComandesPage.xaml</DependentUpon>

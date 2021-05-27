@@ -33,6 +33,7 @@ namespace GestioComandes
 
 
         public ObservableCollection<ComandaDB> comandes = new ObservableCollection<ComandaDB>();
+        public ObservableCollection<ComandaViewModel> comandesVM = new ObservableCollection<ComandaViewModel>();
 
 
         public ObservableCollection<UIComanda> comandesUI = new ObservableCollection<UIComanda>();
@@ -58,22 +59,44 @@ namespace GestioComandes
 
             // Crida a la BD
             comandes = ComandaDB.GetComandes();
+            iniComandesVM();
             //PComandes = comandes;
 
             foreach (ComandaDB com in comandes)
             {
-                UIComanda uic = new UIComanda();
-                uic.PComandaDB = com;
+                UIComanda uic = new UIComanda(com);
+                //uic.PComandaDB = com;
                 comandesUI.Add(uic);
             }
 
             //and update the UI afterwards:
 
             // Actualitzar UI
-            lsvComandes.ItemsSource = comandesUI;
+            //lsvComandes.ItemsSource = comandesUI;
+            lsvComandes.ItemsSource = comandesVM;
+
+
+            ComandaDB comanda = ComandaDB.GetComandes()[0];
+            provaUIComanda.PComandaDB = comanda;
+
+            foreach(ComandaDB com1 in comandes)
+            {
+                UIComanda uic = new UIComanda(com1);
+                uic.Width = 50;
+                stkComandesUI.Children.Add(uic);
+            }
+
 
             // task que refrescarà la pàgina cada 2 segons
             //_timer = new Timer(new TimerCallback((obj) => RefrescarPagina()), null, 0, 2000);
+        }
+
+        private void iniComandesVM()
+        {
+            foreach(ComandaDB comandaDB in comandes)
+            {
+                comandesVM.Add(new ComandaViewModel(comandaDB));
+            }
         }
 
         private async void RefrescarPagina()

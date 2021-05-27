@@ -16,11 +16,13 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
         <TextBlock Text="TAULA DE COMANDES" Grid.Row="0"></TextBlock>
 
-        <ListView x:Name="lsvComandes" Grid.Row="1" Background="Gray">
+        <ListView x:Name="lsvComandes" Grid.Row="1" Background="Gray" Height="200">
             <!--fer listview horitzontal:-->
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -36,7 +38,7 @@
 
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <view:UIComanda></view:UIComanda>
+                    <view:UIComanda PComandaDB="{Binding}"></view:UIComanda>
                     
                     <!--<Border Padding="10" BorderBrush="Gray" BorderThickness="1" VerticalAlignment="Top" Background="Orange">
                         <Grid>
@@ -151,6 +153,14 @@
 
         </ListView>
 
+        <view:UIComanda x:Name="provaUIComanda" Grid.Row="2"></view:UIComanda>
+
+        <ScrollViewer  Grid.Row="3">
+            <StackPanel x:Name="stkComandesUI" Orientation="Horizontal"></StackPanel>
+            
+        </ScrollViewer>
+        
+        
         <!--<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Top">
             <StackPanel Orientation="Vertical" Background="LightGray" VerticalAlignment="Top">
                 <TextBlock Text="COMANDA NO 1"></TextBlock>

@@ -26,6 +26,12 @@ namespace GestioComandes.View
             this.InitializeComponent();
         }
 
+        public UIComanda(ComandaDB pComandaDB)
+        {
+            PComandaDB = pComandaDB;
+            this.InitializeComponent();
+        }
+
 
         /*
          * CODI
@@ -33,6 +39,34 @@ namespace GestioComandes.View
         TAULA
         CAMBRER
         */
+
+
+        #region PComandaVM
+        public ComandaViewModel PComandaVM
+        {
+            get { return (ComandaViewModel)GetValue(PComandaVMProperty); }
+            set { SetValue(PComandaVMProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for PComandaVM.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty PComandaVMProperty =
+            DependencyProperty.Register("PComandaVM", typeof(ComandaViewModel), typeof(UIComanda), new PropertyMetadata(new ComandaViewModel(), PComandaVMChangedCallbackStatic));
+        private static void PComandaVMChangedCallbackStatic(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            UIComanda ui = (UIComanda)d;
+            ui.PComandaVMChangedCallback();
+        }
+        private void PComandaVMChangedCallback()
+        {
+            PCodi = PComandaDB.Codi;
+            PData = PComandaDB.Data;
+            PTaula = PComandaDB.Taula;
+            PCambrer = PComandaDB.Cambrer;
+            PLinies = PComandaDB.Linies;
+        }
+        #endregion
+
+
 
         #region PComandaDB
         public ComandaDB PComandaDB
