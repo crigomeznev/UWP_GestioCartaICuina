@@ -5,14 +5,15 @@
     xmlns:local="using:GestioComandes.View"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"        
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400"
     x:Name="ucComanda">
-    <!--Loaded="ucComanda_Loaded">-->
 
     <UserControl.Resources>
         <local:BoolToVisibility x:Key="BoolToVisibility"></local:BoolToVisibility>
+        <local:EstatLiniaToBoolConverter x:Key="EstatLiniaToBoolConverter"></local:EstatLiniaToBoolConverter>
     </UserControl.Resources>
 
 
@@ -38,35 +39,35 @@
                 </Grid.ColumnDefinitions>
 
                 <Border Grid.Row="0" Grid.Column="0" BorderBrush="Gray" BorderThickness="1 1 0 0">
-                    <TextBlock Text="Taula" FontSize="20" HorizontalAlignment="Center" Margin="5" FontWeight="SemiBold"></TextBlock>
+                    <TextBlock Text="Taula" FontSize="16" HorizontalAlignment="Center" Margin="5" FontWeight="SemiBold"></TextBlock>
                 </Border>
                 <Border Grid.Row="0" Grid.Column="1" BorderBrush="Gray" BorderThickness="1 1 1 0">
                     <TextBlock Text="{Binding ElementName=ucComanda, Path=PComandaVM.ComandaOriginal.Taula}"
-                                HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Margin="5"></TextBlock>
+                                HorizontalAlignment="Center" FontSize="16" FontWeight="Bold" Margin="5"></TextBlock>
                 </Border>
 
                 <Border Grid.Row="1" Grid.Column="0" BorderBrush="Gray" BorderThickness="1 1 0 0">
-                    <TextBlock Text="Cambrer/a" FontSize="20" HorizontalAlignment="Center" Margin="5" FontWeight="SemiBold"></TextBlock>
+                    <TextBlock Text="Cambrer/a" FontSize="16" HorizontalAlignment="Center" Margin="5" FontWeight="SemiBold"></TextBlock>
                 </Border>
                 <Border Grid.Row="1" Grid.Column="1" BorderBrush="Gray" BorderThickness="1 1 1 0">
                     <TextBlock Text="{Binding ElementName=ucComanda, Path=PComandaVM.ComandaOriginal.Cambrer.Nom}"
-                                HorizontalAlignment="Center" FontSize="20" Margin="5"></TextBlock>
+                                HorizontalAlignment="Center" FontSize="16" Margin="5"></TextBlock>
                 </Border>
 
                 <Border Grid.Row="2" Grid.Column="0" BorderBrush="Gray" BorderThickness="1 1 0 0">
-                    <TextBlock Text="Data" FontSize="20" HorizontalAlignment="Center" Margin="5" FontWeight="SemiBold"></TextBlock>
+                    <TextBlock Text="Data" FontSize="16" HorizontalAlignment="Center" Margin="5" FontWeight="SemiBold"></TextBlock>
                 </Border>
                 <Border Grid.Row="2" Grid.Column="1" BorderBrush="Gray" BorderThickness="1 1 1 0">
                     <TextBlock Text="{Binding ElementName=ucComanda, Path=PData}"
-                                HorizontalAlignment="Center" FontSize="20" Margin="5"></TextBlock>
+                                HorizontalAlignment="Center" FontSize="16" Margin="5"></TextBlock>
                 </Border>
 
                 <Border Grid.Row="3" Grid.Column="0" BorderBrush="Gray" BorderThickness="1 1 0 1">
-                    <TextBlock Text="Finalitzada" FontSize="20" HorizontalAlignment="Center" Margin="5" FontWeight="SemiBold"></TextBlock>
+                    <TextBlock Text="Finalitzada" FontSize="16" HorizontalAlignment="Center" Margin="5" FontWeight="SemiBold"></TextBlock>
                 </Border>
                 <Border Grid.Row="3" Grid.Column="1" BorderBrush="Gray" BorderThickness="1 1 1 1">
                     <TextBlock Text="{Binding ElementName=ucComanda, Path=PComandaVM.Finalitzada}"
-                                HorizontalAlignment="Center" FontSize="20" Margin="5"></TextBlock>
+                                HorizontalAlignment="Center" FontSize="16" Margin="5"></TextBlock>
                 </Border>
 
 
@@ -81,20 +82,52 @@
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="Totes les línies = PREPARADES" Grid.Row="0"></TextBlock>
                 <Button x:Name="btnFinalitzarComanda" Click="btnFinalitzarComanda_Click"
                     Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                    Content="FINALITZAR" FontSize="20" FontWeight="Bold" Padding="20"></Button>
+                    Padding="20">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Text="Totes les línies estan preparades" HorizontalAlignment="Center"></TextBlock>
+                        <TextBlock Text="FINALITZAR" HorizontalAlignment="Center" FontSize="25" FontWeight="Bold"></TextBlock>
+                    </StackPanel>
+                </Button>
             </Grid>
 
             <!--línies de comanda-->
-            <ListView ItemsSource="{Binding ElementName=ucComanda, Path=PComandaVM.Linies}" Grid.Row="3" Background="Yellow" x:Name="lsvLinies">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <local:UILiniaComanda PLiniaComandaVM="{Binding}"></local:UILiniaComanda>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <Grid Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="PLATS" HorizontalAlignment="Center" FontWeight="SemiBold"></TextBlock>
+
+
+                <controls:DataGrid x:Name="dtgLinies" ItemsSource="{Binding ElementName=ucComanda, Path=PComandaVM.Linies}" Grid.Row="1"
+                                   RowDetailsVisibilityMode="VisibleWhenSelected" SelectionMode="Extended"
+                    GridLinesVisibility="All" AlternatingRowBackground="LightGray" AutoGenerateColumns="False">
+                    <controls:DataGrid.Columns>
+                        <controls:DataGridTextColumn Header="Número" Binding="{Binding LiniaComandaOriginal.Num}" Width="SizeToCells"/>
+                        <controls:DataGridTextColumn Header="Plat" Binding="{Binding LiniaComandaOriginal.Item.Nom}" Width="SizeToCells"/>
+                        <controls:DataGridTextColumn Header="Quantitat" Binding="{Binding LiniaComandaOriginal.Quantitat}" Width="SizeToCells"/>
+                        <controls:DataGridTemplateColumn Header="Estat">
+                            <controls:DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Content="Estat" IsChecked="{Binding Estat, Converter={StaticResource EstatLiniaToBoolConverter}, Mode=TwoWay}"></CheckBox>
+                                </DataTemplate>
+                            </controls:DataGridTemplateColumn.CellTemplate>
+                        </controls:DataGridTemplateColumn>
+                    </controls:DataGrid.Columns>
+                </controls:DataGrid>
+
+                <!--<ListView ItemsSource="{Binding ElementName=ucComanda, Path=PComandaVM.Linies}" Grid.Row="1" x:Name="lsvLinies">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <local:UILiniaComanda PLiniaComandaVM="{Binding}"></local:UILiniaComanda>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>-->
+
+            </Grid>
 
 
         </Grid>

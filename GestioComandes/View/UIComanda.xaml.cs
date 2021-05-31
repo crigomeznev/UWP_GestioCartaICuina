@@ -188,19 +188,12 @@ namespace GestioComandes.View
             //PComandaVM.Finalitzada = true;
 
             // Millorar:
-            PComandaVM.ComandaOriginal.Finalitzada = true;
+            if (PComandaVM != null)
+            {
+                PComandaVM.ComandaOriginal.Finalitzada = true;
 
-            PComandaVM.ActualitzarComandaDB();
-
+                PComandaVM.ActualitzarComandaDB();
+            }
         }
-
-        //private void ucComanda_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    // amagar llista si ja no hi ha linies pendents
-        //    if (PComandaVM.Finalitzada)
-        //    {
-        //        grdConfirmacio.Visibility = Visibility.Visible;
-        //    }
-        //}
     }
 }
