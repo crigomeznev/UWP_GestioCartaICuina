@@ -106,6 +106,10 @@ namespace GestioCarta.View
             = new Dictionary<UIContext, AppWindow>();
 
 
+        // Ruta de foto seleccionada
+        private string selectedPhotoPath;
+        private byte[] selectedPhotoBa;
+
         private void netejarForm()
         {
             //tbkNou.Text = plat.Nom;
@@ -259,7 +263,8 @@ namespace GestioCarta.View
             SelectedPlat.DescripcioMD = txbPlatDescripcio.Text;
             SelectedPlat.Preu = Convert.ToDecimal(nbbPlatPreu.Value);
             SelectedPlat.Disponible = chkDisponible.IsChecked.Value;
-            SelectedPlat.Foto = (BitmapImage)imgPlatFoto.Source;
+            //SelectedPlat.Foto = (BitmapImage)imgPlatFoto.Source;
+            SelectedPlat.FotoBa = selectedPhotoBa;
 
             SelectedPlat.PlatOriginal.Update();
 
@@ -293,7 +298,8 @@ namespace GestioCarta.View
             nouPlat.Preu = preu;
             // TODO FOTO
             //nouPlat.Foto = ImageToByteArray((BitmapImage)imgPlatFoto.Source);
-            nouPlat.Foto = (BitmapImage)imgPlatFoto.Source;
+            //nouPlat.Foto = (BitmapImage)imgPlatFoto.Source;
+            nouPlat.FotoBa = selectedPhotoBa;
             nouPlat.Disponible = chkDisponible.IsEnabled ? true : false;
             nouPlat.PlatOriginal.Categoria = (CategoriaDB)lsvCategories.SelectedValue;
 
@@ -361,8 +367,18 @@ namespace GestioCarta.View
                     // Crear una imatge en memòria (BitmapImage) a partir de l'arxiu copiat a ApplicationData
                     BitmapImage tmpBitmap = new BitmapImage(new Uri(copiedFile.Path));
                     // ..... YOUR CODE HERE ...........
-
+                    selectedPhotoPath = copiedFile.Path;
+                    // guardem foto en bitmapimage i en byte array
                     imgPlatFoto.Source = tmpBitmap;
+
+
+                    // Guardar foto en byte array
+                    FileStream fs = new FileStream(selectedPhotoPath, FileMode.Open, FileAccess.Read);
+                    BinaryReader br = new BinaryReader(fs);
+                    //Array.Clear(selectedPhotoBa, 0, selectedPhotoBa.Length);
+                    selectedPhotoBa = br.ReadBytes((int)fs.Length);
+                    br.Close();
+                    fs.Close();
                 }
             }
             catch (Exception ex)

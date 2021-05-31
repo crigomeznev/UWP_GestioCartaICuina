@@ -118,6 +118,8 @@ namespace GestioCarta.View
         }
 
         // Propietats només de PlatViewModel
+
+        // Per mostrar la imatge en la UI
         public BitmapImage Foto
         {
             get => foto;
@@ -125,10 +127,7 @@ namespace GestioCarta.View
             {
                 // Quan modifiquem la foto Bitmap aplicarem els canvis a la foto byte-array
                 foto = value;
-                //foto.
-
-
-                FotoBa = ImageToByteArray(value);
+                //FotoBa = ImageToByteArray(value);
             }
         }
         public PlatDB PlatOriginal { get => platOriginal; set => platOriginal = value; }

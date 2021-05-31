@@ -396,7 +396,7 @@ namespace CookomaticDB.Model
                             DBUtils.crearParametre(consulta, "DESCRIPCIO_MD", System.Data.DbType.String, this.DescripcioMD);
                             DBUtils.crearParametre(consulta, "PREU", System.Data.DbType.Decimal, this.Preu);
                             DBUtils.crearParametre(consulta, "FOTO", System.Data.DbType.Binary, this.Foto);
-                            DBUtils.crearParametre(consulta, "DISPONIBLE", System.Data.DbType.String, this.Disponible);
+                            DBUtils.crearParametre(consulta, "DISPONIBLE", System.Data.DbType.Boolean, this.Disponible);
                             DBUtils.crearParametre(consulta, "CODI", System.Data.DbType.Int64, this.Codi);
 
                             // B) llançar la consulta
