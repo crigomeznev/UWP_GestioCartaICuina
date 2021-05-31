@@ -14,11 +14,14 @@ using Windows.Globalization.NumberFormatting;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
+using Windows.UI;
 using Windows.UI.Popups;
+using Windows.UI.WindowManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
+using Windows.UI.Xaml.Hosting;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
@@ -95,6 +98,13 @@ namespace GestioCarta.View
                 }
             }
         }
+
+
+        // Gestió de l'altra pantalla
+        // Track open app windows in a Dictionary.
+        public static Dictionary<UIContext, AppWindow> AppWindows { get; set; }
+            = new Dictionary<UIContext, AppWindow>();
+
 
         private void netejarForm()
         {
@@ -399,6 +409,47 @@ namespace GestioCarta.View
         private void PlatModificat(object sender, RoutedEventArgs e)
         {
             if (Estat.Equals(EstatView.CONSULTA)) Estat = EstatView.MODIFICACIO;
+        }
+
+
+        // Obrir finestra amb webview a jasperreports
+        private async void btnObrirReport_Click(object sender, RoutedEventArgs e)
+        {
+            // Create a new window.
+            AppWindow appWindow = await AppWindow.TryCreateAsync();
+
+            // Create a Frame and navigate to the Page you want to show in the new window.
+            Frame appWindowContentFrame = new Frame();
+            appWindowContentFrame.Navigate(typeof(ImprimirCartaPage));
+
+            // Attach the XAML content to the window.
+            ElementCompositionPreview.SetAppWindowContent(appWindow, appWindowContentFrame);
+
+            // Add the new page to the Dictionary using the UIContext as the Key.
+            AppWindows.Add(appWindowContentFrame.UIContext, appWindow);
+            appWindow.Title = "App Window " + AppWindows.Count.ToString();
+
+            // When the window is closed, be sure to release
+            // XAML resources and the reference to the window.
+            appWindow.Closed += delegate
+            {
+                Debug.WriteLine("TANCANT FINESTRA REPORTS");
+                CartaPage.AppWindows.Remove(appWindowContentFrame.UIContext);
+                appWindowContentFrame.Content = null;
+                appWindow = null;
+            };
+
+            // Show the window.
+            await appWindow.TryShowAsync();
+        }
+
+        // Tancar finestra amb webview a jasperreports
+        private async void btnTancarReport_Click(object sender, RoutedEventArgs e)
+        {
+            while (AppWindows.Count > 0)
+            {
+                await AppWindows.Values.First().CloseAsync();
+            }
         }
 
 

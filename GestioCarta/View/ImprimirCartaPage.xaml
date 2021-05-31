@@ -1,0 +1,31 @@
+﻿<Page
+    x:Class="GestioCarta.View.ImprimirCartaPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GestioCarta.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Border Background="AntiqueWhite">
+        <Grid Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" MinHeight="52"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="AliceBlue">
+                <TextBlock Text="URL:" VerticalAlignment="Center" Margin="10 0"></TextBlock>
+                <TextBox x:Name="txbURL" Text="" Width="600" VerticalAlignment="Center"></TextBox>
+                <Button x:Name="btnCerca" Content="Vés" Click="btnCerca_Click"></Button>
+                <ProgressRing x:Name="ctlProgress" Height="30" Width="30"></ProgressRing>
+            </StackPanel>
+
+            <!--<TextBlock Text="IMPRIMIR LA CARTA EN JASPERREPORTS" FontSize="70"></TextBlock>-->
+            <WebView x:Name="wbvJasperReports" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                 NavigationStarting="wbvJasperReports_NavigationStarting" NavigationCompleted="wbvJasperReports_NavigationCompleted"
+                     DefaultBackgroundColor="White"></WebView>
+        </Grid>
+    </Border>
+</Page>

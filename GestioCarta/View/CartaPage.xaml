@@ -53,7 +53,7 @@
                                     <!--<Image Source="{Binding Foto, Converter={StaticResource ByteArrayToBitmapImageConverter}}"></Image>-->
                                     <!--<Image Width="50" Height="50" Source="{Binding Foto, Converter={StaticResource ByteArrayToBitmapImageConverter}}"
                                            Stretch="UniformToFill"></Image>-->
-                                    <Image Width="50" Height="50" Source="{Binding Foto}"
+                                    <Image Width="150" Height="150" Source="{Binding Foto}"
                                            Stretch="UniformToFill"></Image>
                                 </Grid>
 
@@ -130,6 +130,10 @@
                     Content="Eliminar plat" HorizontalAlignment="Stretch"></Button>
             <Button x:Name="btnNouPlat" Click="btnNouPlat_Click"
                     Content="Nou plat" HorizontalAlignment="Stretch"></Button>
+            <Button x:Name="btnObrirReport" Click="btnObrirReport_Click"
+                    Content="Imprimir informe de la carta" HorizontalAlignment="Stretch"></Button>
+            <Button x:Name="btnTancarReport" Click="btnTancarReport_Click"
+                    Content="Tancar finestra d'informes" HorizontalAlignment="Stretch"></Button>
         </StackPanel>
 
         <!--<Button x:Name="btnEliminarPlat" Click="btnEliminarPlat_Click"
