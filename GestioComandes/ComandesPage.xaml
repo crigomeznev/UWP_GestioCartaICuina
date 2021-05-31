@@ -7,7 +7,10 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="Beige"
+    >
+    <!--Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">-->
+
     <UserControl.Resources>
         <!--<view:EstatLiniaToBoolConverter x:Key="EstatLiniaToBoolConverter"></view:EstatLiniaToBoolConverter>-->
     </UserControl.Resources>
@@ -18,33 +21,42 @@
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="TAULA DE COMANDES" Grid.Row="0"></TextBlock>
+        <RelativePanel Grid.Row="0">
+            <TextBlock x:Name="tbkTitol" Text="TAULER DE COMANDES" Grid.Row="0" FontWeight="ExtraBlack" FontSize="40"
+                       RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"></TextBlock>
+            <TextBlock x:Name="tbkRestaurant" Text="Restaurant &quot;El Bon Profit&quot;" FontWeight="SemiLight" FontStyle="Italic" FontSize="20"
+                       RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True"></TextBlock>
+            
+        </RelativePanel>
 
-        <ListView x:Name="lsvComandes" Grid.Row="1">
-            <ListView.Background>
-                <ImageBrush ImageSource="Assets/cork-board.jpg"></ImageBrush>
-            </ListView.Background>
-            <!--fer listview horitzontal:-->
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <ItemsStackPanel Orientation="Horizontal" VerticalAlignment="Top"></ItemsStackPanel>
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
+        <Border Grid.Row="1" BorderBrush="Brown" BorderThickness="5">
+            <ListView x:Name="lsvComandes" Grid.Row="1">
+                <ListView.Background>
+                    <ImageBrush ImageSource="Assets/cork-board.jpg"></ImageBrush>
+                </ListView.Background>
 
-            <ListView.ItemContainerStyle>
+                <!--fer listview horitzontal:-->
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsStackPanel Orientation="Horizontal" VerticalAlignment="Top"></ItemsStackPanel>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+
+                <!--<ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
                 </Style>
-            </ListView.ItemContainerStyle>
+            </ListView.ItemContainerStyle>-->
 
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <view:UIComanda PComandaVM="{Binding}"></view:UIComanda>
-                </DataTemplate>
-            </ListView.ItemTemplate>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <view:UIComanda PComandaVM="{Binding}"></view:UIComanda>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
 
 
 
-        </ListView>
+            </ListView>
+        </Border>
     </Grid>
 </Page>

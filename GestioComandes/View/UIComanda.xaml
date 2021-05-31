@@ -23,10 +23,14 @@
                 <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Background="Beige">
+
+            <TextBlock Grid.Row="0" Text="COMANDA" HorizontalAlignment="Center" FontWeight="SemiBold"></TextBlock>
+
+            <Grid Grid.Row="1" Background="Beige">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"></RowDefinition>
                     <RowDefinition Height="auto"></RowDefinition>
@@ -99,10 +103,9 @@
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="PLATS" HorizontalAlignment="Center" FontWeight="SemiBold"></TextBlock>
+                <TextBlock Grid.Row="0" Text="LÍNIES DE DETALL" HorizontalAlignment="Center" FontWeight="SemiBold"></TextBlock>
 
-
-                <controls:DataGrid x:Name="dtgLinies" ItemsSource="{Binding ElementName=ucComanda, Path=PComandaVM.Linies}" Grid.Row="1"
+                <controls:DataGrid Grid.Row="1" x:Name="dtgLinies" ItemsSource="{Binding ElementName=ucComanda, Path=PComandaVM.Linies}"
                                    RowDetailsVisibilityMode="VisibleWhenSelected" SelectionMode="Extended"
                     GridLinesVisibility="All" AlternatingRowBackground="LightGray" AutoGenerateColumns="False">
                     <controls:DataGrid.Columns>
