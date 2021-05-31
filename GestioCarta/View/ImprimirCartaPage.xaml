@@ -9,23 +9,27 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Border Background="AntiqueWhite">
-        <Grid Margin="10">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" MinHeight="52"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="AliceBlue">
-                <TextBlock Text="URL:" VerticalAlignment="Center" Margin="10 0"></TextBlock>
-                <TextBox x:Name="txbURL" Text="" Width="600" VerticalAlignment="Center"></TextBox>
-                <Button x:Name="btnCerca" Content="Vés" Click="btnCerca_Click"></Button>
-                <ProgressRing x:Name="ctlProgress" Height="30" Width="30"></ProgressRing>
-            </StackPanel>
+            <RelativePanel Grid.Row="0" Background="BurlyWood">
+                <TextBox x:Name="txbURL" Text="" Width="600" VerticalAlignment="Center" HorizontalAlignment="Center"
+                         RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True"></TextBox>
+                <Button Content="Vés" x:Name="btnVes" Click="btnVes_Click"
+                        RelativePanel.RightOf="txbURL" RelativePanel.AlignVerticalCenterWithPanel="True"></Button>
+            </RelativePanel>
 
             <!--<TextBlock Text="IMPRIMIR LA CARTA EN JASPERREPORTS" FontSize="70"></TextBlock>-->
-            <WebView x:Name="wbvJasperReports" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+            <WebView x:Name="wbvJasperReports" Grid.Row="1" Margin="10"
+                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                  NavigationStarting="wbvJasperReports_NavigationStarting" NavigationCompleted="wbvJasperReports_NavigationCompleted"
                      DefaultBackgroundColor="White"></WebView>
+            
+            <ProgressRing x:Name="ctlProgress" Grid.Row="1" Height="200" Width="200" Foreground="Red"></ProgressRing>
+
         </Grid>
     </Border>
 </Page>

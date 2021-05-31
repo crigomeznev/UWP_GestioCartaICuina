@@ -135,7 +135,8 @@ namespace GestioCarta.View
         public async Task iniFotoAsync()
         {
             // Construim BitmapImage a partir de la byte[]
-            Foto = await ImageFromBytes(fotoBa);
+            if (FotoBa != null)
+                Foto = await ImageFromBytes(fotoBa);
         }
 
 

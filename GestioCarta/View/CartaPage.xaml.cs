@@ -36,9 +36,10 @@ namespace GestioCarta.View
     /// </summary>
     public sealed partial class CartaPage : Page
     {
-        private ObservableCollection<CategoriaDB> llistaCategories;
-        private ObservableCollection<PlatDB> llistaPlats;
-        private ObservableCollection<PlatViewModel> llistaPlatsVM;
+        private ObservableCollection<CategoriaDB> llistaCategories = new ObservableCollection<CategoriaDB>();
+        private ObservableCollection<PlatDB> llistaPlats = new ObservableCollection<PlatDB>();
+        private ObservableCollection<PlatViewModel> llistaPlatsVM = new ObservableCollection<PlatViewModel>();
+        private ObservableCollection<PlatViewModel> llistaPlatsVMFiltrats = new ObservableCollection<PlatViewModel>();
 
         //private PlatDB selectedPlat;
         private PlatViewModel selectedPlat;
@@ -51,15 +52,32 @@ namespace GestioCarta.View
 
                 // UI
                 if (selectedPlat == null)
-                    btnEliminarPlat.Visibility = Visibility.Collapsed;
+                {
+                    Estat = EstatView.NOU;
+                    apbDelete.Visibility = Visibility.Collapsed;
+                }
                 else
-                    btnEliminarPlat.Visibility = Visibility.Visible;
+                {
+                    Estat = EstatView.CONSULTA;
+                    apbDelete.Visibility = Visibility.Visible;
 
-                tbkNou.Text = selectedPlat==null? "" : selectedPlat.Nom;
-                txbPlatNom.Text = selectedPlat==null? "" : selectedPlat.Nom;
-                txbPlatDescripcio.Text = selectedPlat==null? "" : selectedPlat.DescripcioMD;
-                nbbPlatPreu.Value = selectedPlat==null? 0.00 : (double)selectedPlat.Preu;
-                chkDisponible.IsChecked = selectedPlat==null? false : selectedPlat.Disponible;
+                    tbkNou.Text = selectedPlat == null ? "" : selectedPlat.Nom;
+                    txbPlatNom.Text = selectedPlat == null ? "" : selectedPlat.Nom;
+                    txbPlatDescripcio.Text = selectedPlat == null ? "" : selectedPlat.DescripcioMD;
+                    nbbPlatPreu.Value = selectedPlat == null ? 0.00 : (double)selectedPlat.Preu;
+                    chkDisponible.IsChecked = selectedPlat == null ? false : selectedPlat.Disponible;
+
+                    if (SelectedPlat.Foto != null)
+                    {
+                        imgPlatFoto.Source = SelectedPlat.Foto;
+                        selectedPhotoBa = SelectedPlat.FotoBa;
+                    }
+                    else
+                    {
+                        imgPlatFoto.Source = null;
+                        selectedPhotoBa = null;
+                    }
+                }
             }
         }
 
@@ -68,7 +86,7 @@ namespace GestioCarta.View
         internal EstatView Estat
         {
             get => estat;
-            set 
+            set
             {
                 estat = value;
 
@@ -82,15 +100,11 @@ namespace GestioCarta.View
                     case EstatView.CONSULTA:
                     case EstatView.MODIFICACIO:
                         btnNetejarSeleccio.Visibility = Visibility.Visible;
-                        btnEliminarPlat.Visibility = Visibility.Visible;
-                        btnNouPlat.Visibility = Visibility.Visible;
                         btnInserirPlat.Visibility = Visibility.Collapsed;
                         break;
                     case EstatView.NOU:
                         netejarForm();
                         btnNetejarSeleccio.Visibility = Visibility.Collapsed;
-                        btnEliminarPlat.Visibility = Visibility.Collapsed;
-                        btnNouPlat.Visibility = Visibility.Collapsed;
                         btnInserirPlat.Visibility = Visibility.Visible;
                         tbkNou.Text = "Nou Plat";
                         //btnActualitzarPlat.Visibility = Visibility.Collapsed;
@@ -110,6 +124,8 @@ namespace GestioCarta.View
         private string selectedPhotoPath;
         private byte[] selectedPhotoBa;
 
+
+        // UI
         private void netejarForm()
         {
             //tbkNou.Text = plat.Nom;
@@ -118,10 +134,9 @@ namespace GestioCarta.View
             nbbPlatPreu.Value = 10.00;
             chkDisponible.IsChecked = true;
             imgPlatFoto.Source = null;
+            selectedPhotoPath = null;
+            selectedPhotoBa = null;
         }
-
-        //private Dictionary<long, PlatDB> llistaPlats;
-
         private void SetNumberBoxNumberFormatter()
         {
             //IncrementNumberRounder rounder = new IncrementNumberRounder();
@@ -139,7 +154,6 @@ namespace GestioCarta.View
         public CartaPage()
         {
             this.InitializeComponent();
-
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -147,15 +161,13 @@ namespace GestioCarta.View
             SetNumberBoxNumberFormatter();
             try
             {
-                // Viewmodel
-                llistaPlatsVM = new ObservableCollection<PlatViewModel>();
-
+                // Inicialment carreguem tots els plats
                 llistaCategories = CategoriaDB.GetCategories();
                 llistaPlats = PlatDB.GetPlats();
                 CarregarPlatsVM();
 
                 lsvCategories.ItemsSource = llistaCategories;
-                lsvPlats.ItemsSource = llistaPlatsVM;
+                lsvPlats.ItemsSource = llistaPlatsVMFiltrats;
 
                 Estat = EstatView.CONSULTA;
             }
@@ -166,39 +178,86 @@ namespace GestioCarta.View
         }
 
 
+        #region DB
+        private void CarregarPlatsDB()
+        {
+            llistaPlats.Clear();
+            llistaPlats = PlatDB.GetPlats();
+        }
+        #endregion
+
+
 
         #region ViewModel
         private async void CarregarPlatsVM()
         {
             llistaPlatsVM.Clear();
+            llistaPlatsVMFiltrats.Clear();
             if (llistaPlats != null)
             {
-                foreach(PlatDB platDB in llistaPlats)
+                foreach (PlatDB platDB in llistaPlats)
                 {
                     PlatViewModel platVM = new PlatViewModel(platDB);
                     try
                     {
                         await platVM.iniFotoAsync();
-                    } catch(Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         Debug.WriteLine(ex);
                     }
                     llistaPlatsVM.Add(platVM);
+                    llistaPlatsVMFiltrats.Add(platVM);
                 }
             }
         }
+
+        private PlatViewModel CarregarPlatVM(PlatDB platDB)
+        {
+            return new PlatViewModel(platDB);
+        }
+
+        private void FiltrarPerCategoria(CategoriaDB categoria)
+        {
+            llistaPlatsVMFiltrats.Clear();
+            foreach (PlatViewModel plat in llistaPlatsVM)
+            {
+                if (plat.PlatOriginal.Categoria.Equals(categoria))
+                {
+                    llistaPlatsVMFiltrats.Add(plat);
+                }
+            }
+            lsvPlats.ItemsSource = llistaPlatsVMFiltrats;
+        }
+
+        private void FiltrarPerNom(string nom)
+        {
+            llistaPlatsVMFiltrats.Clear();
+
+            // Categoria seleccionada pot ser null
+            CategoriaDB categoriaSeleccionada = (CategoriaDB)lsvCategories.SelectedValue;
+
+            foreach (PlatViewModel plat in llistaPlatsVM)
+            {
+                if (plat.PlatOriginal.Nom.ToUpper().Contains(nom.ToUpper()) &&
+                    (categoriaSeleccionada == null || plat.PlatOriginal.Categoria.Equals(categoriaSeleccionada)))
+                {
+                    llistaPlatsVMFiltrats.Add(plat);
+                }
+            }
+        }
+
         #endregion
 
         private void btnMostrarPlats_Click(object sender, RoutedEventArgs e)
         {
             // filtre per nom
             string nomFiltre = txbFiltreNomPlat.Text;
-            llistaPlats = PlatDB.GetPlatsPerNom(nomFiltre);
-            CarregarPlatsVM();
-            lsvPlats.ItemsSource = llistaPlatsVM;
+
+            FiltrarPerNom(nomFiltre);
 
             // netegem seleccio
-            NetejarSeleccio();
+            //NetejarSeleccio();
         }
 
         private void lsvCategories_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -207,36 +266,39 @@ namespace GestioCarta.View
             if (lsvCategories.SelectedValue != null)
             {
                 CategoriaDB categoria = (CategoriaDB)lsvCategories.SelectedValue;
-                llistaPlats = PlatDB.GetPlatsPerCategoria(categoria);
-                CarregarPlatsVM();
-                lsvPlats.ItemsSource = llistaPlatsVM;
+
+                //llistaPlatsVM.Clear();
+                FiltrarPerCategoria(categoria);
+
+
+                //llistaPlats = PlatDB.GetPlatsPerCategoria(categoria);
+                //CarregarPlatsVM();
+                //lsvPlats.ItemsSource = llistaPlatsVM;
             }
         }
+
+
+
 
         //private async void lsvPlats_SelectionChanged(object sender, SelectionChangedEventArgs e)
         private void lsvPlats_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (lsvPlats.SelectedValue != null)
-            {
-                // UI
-                Estat = EstatView.MODIFICACIO;
+            //if (lsvPlats.SelectedValue != null)
+            //{
+                //// UI
+                //Estat = EstatView.MODIFICACIO;
 
                 SelectedPlat = (PlatViewModel)lsvPlats.SelectedItem;
-                if (SelectedPlat.Foto != null)
-                {
-                    //imgPlatFoto.Source = await ByteArrayToImage(selectedPlat.Foto);
-                    imgPlatFoto.Source = SelectedPlat.Foto;
-                }
-            }
-            else
-            {
+            //}
+            //else
+            //{
                 // UI
 
                 // Com que listview de plats no tindrà cap plat seleccionat, estat del view: NOU
-                Estat = EstatView.NOU;
+            //    Estat = EstatView.NOU;
 
-                //btnInserirPlat.Visibility = Visibility.Visible;
-            }
+            //    //btnInserirPlat.Visibility = Visibility.Visible;
+            //}
 
         }
 
@@ -263,15 +325,15 @@ namespace GestioCarta.View
             SelectedPlat.DescripcioMD = txbPlatDescripcio.Text;
             SelectedPlat.Preu = Convert.ToDecimal(nbbPlatPreu.Value);
             SelectedPlat.Disponible = chkDisponible.IsChecked.Value;
-            //SelectedPlat.Foto = (BitmapImage)imgPlatFoto.Source;
             SelectedPlat.FotoBa = selectedPhotoBa;
 
             SelectedPlat.PlatOriginal.Update();
 
-            llistaPlats = PlatDB.GetPlats();
+            CarregarPlatsDB();
             CarregarPlatsVM();
-            lsvPlats.ItemsSource = llistaPlatsVM;
+            //lsvPlats.ItemsSource = llistaPlatsVM;
             SelectedPlat = null;
+            lsvCategories.SelectedValue = null;
         }
 
         // INSERT
@@ -292,31 +354,34 @@ namespace GestioCarta.View
             nouPlat.PlatOriginal = new PlatDB();
             nouPlat.Nom = txbPlatNom.Text;
             nouPlat.DescripcioMD = txbPlatDescripcio.Text;
-
             Decimal preu = Convert.ToDecimal(nbbPlatPreu.Value);
-            //Decimal.TryParse(nbbPlatPreu.Value, out preu);
             nouPlat.Preu = preu;
-            // TODO FOTO
-            //nouPlat.Foto = ImageToByteArray((BitmapImage)imgPlatFoto.Source);
-            //nouPlat.Foto = (BitmapImage)imgPlatFoto.Source;
             nouPlat.FotoBa = selectedPhotoBa;
             nouPlat.Disponible = chkDisponible.IsEnabled ? true : false;
             nouPlat.PlatOriginal.Categoria = (CategoriaDB)lsvCategories.SelectedValue;
-
             nouPlat.PlatOriginal.Insert();
 
+            CarregarPlatsDB();
+            CarregarPlatsVM();
+
             // Tornar a estat modificació:
-            Estat = EstatView.MODIFICACIO;
+            Estat = EstatView.CONSULTA;
             SelectedPlat = null;
+            lsvCategories.SelectedValue = null;
+            netejarForm();
         }
 
-        // DELETE
-        //private async System.Threading.Tasks.Task btnEliminarPlat_ClickAsync(object sender, RoutedEventArgs e)
-        private async void btnEliminarPlat_Click(object sender, RoutedEventArgs e)
+        // Formulari per nou plat
+        private void apbAdd_Click(object sender, RoutedEventArgs e)
+        {
+            Estat = EstatView.NOU;
+        }
+
+        // Eliminar plat seleccionat
+        private async void apbDelete_Click(object sender, RoutedEventArgs e)
         {
             if (lsvPlats.SelectedItem != null)
             {
-                //PlatDB p = (PlatDB)lsvPlats.SelectedItem;
                 PlatDB p = SelectedPlat.PlatOriginal;
 
                 int liniesImplicades = LiniaComandaDB.GetNumLiniesPerPlat(p);
@@ -326,20 +391,19 @@ namespace GestioCarta.View
                     // podem eliminar plat
                     p.Delete();
                     // actualitzar taula
-                    llistaPlats = PlatDB.GetPlats();
+                    CarregarPlatsDB();
                     CarregarPlatsVM();
-                    lsvPlats.ItemsSource = llistaPlatsVM;
-
+                    NetejarSeleccio();
                 }
                 else
                 {
                     var dialog = new MessageDialog("No es pot eliminar plat. Hi ha línies de comanda relacionades", "Error");
                     await dialog.ShowAsync();
-
-                    //Debug.WriteLine("No es pot eliminar plat. Hi ha línies de comanda relacionades");
                 }
             }
         }
+
+
         #endregion
 
         /// Obrir un selector d'arxius, triar un arxiu i copiar-lo a la carpeta ApplicationData del
@@ -387,27 +451,6 @@ namespace GestioCarta.View
             }
         }
 
-        //public static async Task<BitmapImage> ByteArrayToImage(Byte[] bytes)
-        //{
-        //    BitmapImage image = new BitmapImage();
-        //    using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
-        //    {
-        //        await stream.WriteAsync(bytes.AsBuffer());
-        //        stream.Seek(0);
-        //        await image.SetSourceAsync(stream);
-        //    }
-        //    return image;
-        //}
-
-
-        private void btnNouPlat_Click(object sender, RoutedEventArgs e)
-        {
-            // UI
-            //btnInserirPlat.Visibility = Visibility.Visible;
-
-            // TODO: Estats
-            Estat = EstatView.NOU;
-        }
 
 
         #region UI Update
@@ -468,10 +511,5 @@ namespace GestioCarta.View
             }
         }
 
-
-        //private void PlatModificat(Microsoft.UI.Xaml.Controls.NumberBox sender, Microsoft.UI.Xaml.Controls.NumberBoxValueChangedEventArgs args)
-        //{
-        //    PlatModificat(sender, args);
-        //}
     }
 }

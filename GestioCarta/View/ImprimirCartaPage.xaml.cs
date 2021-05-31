@@ -42,15 +42,8 @@ namespace GestioCarta.View
 
             // Set up event handlers for the window.
             //window.Changed += Window_Changed;
-
+            txbURL.Text = urlJR;
             Navegar(urlJR);
-        }
-
-        private void btnCerca_Click(object sender, RoutedEventArgs e)
-        {
-            String sURL = txbURL.Text;
-            if (sURL.IndexOf("http://") == -1) { sURL = "http://" + sURL; }
-            Navegar(sURL);
         }
 
         private void Navegar(string url)
@@ -74,6 +67,13 @@ namespace GestioCarta.View
         private void wbvJasperReports_NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             ctlProgress.IsActive = false;
+        }
+
+        private void btnVes_Click(object sender, RoutedEventArgs e)
+        {
+            String sURL = txbURL.Text;
+            if (sURL.IndexOf("http://") == -1) { sURL = "http://" + sURL; }
+            Navegar(sURL);
         }
     }
 }

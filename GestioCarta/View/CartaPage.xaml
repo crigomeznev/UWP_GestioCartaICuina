@@ -9,137 +9,173 @@
     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"        
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+     Background="AntiqueWhite"
     Loaded="Page_Loaded">
+
+    <!--Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"-->
+
     <UserControl.Resources>
         <view:ByteArrayToBitmapImageConverter x:Key="ByteArrayToBitmapImageConverter"></view:ByteArrayToBitmapImageConverter>
     </UserControl.Resources>
-    
-    <Grid Margin="0">
+
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition Width="2*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="1.5*"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
-        <ListView x:Name="lsvCategories" Grid.Row="0" Grid.Column="0" SelectionChanged="lsvCategories_SelectionChanged">
-        </ListView>
+        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Restaurant &quot;El Bon Profit&quot;" FontSize="30" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="10"></TextBlock>
 
-        <ScrollViewer Grid.Row="0" Grid.Column="1">
+        <Border Grid.Row="1" Grid.Column="0" Background="Moccasin" BorderBrush="DarkGoldenrod" BorderThickness="0 1 1 0" CornerRadius="0 20 0 0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
 
-            <ListView x:Name="lsvPlats" SelectionChanged="lsvPlats_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                        <!--<Setter Property="Height"></Setter>-->
-                    </Style>
-                </ListView.ItemContainerStyle>
+                <TextBlock Grid.Row="0" Text="CATEGORIES" FontSize="20" HorizontalAlignment="Right" Margin="10 0"
+                        FontStyle="Italic" FontWeight="SemiBold" TextDecorations="Underline"></TextBlock>
 
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Border Padding="10" BorderBrush="Gray" BorderThickness="1" Height="200">
-                            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"></ColumnDefinition>
-                                    <ColumnDefinition Width="1*"></ColumnDefinition>
-                                    <ColumnDefinition Width="2*"></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
+                <Border Grid.Row="1" Background="BurlyWood" Margin="10" CornerRadius="10">
+                    <ListView x:Name="lsvCategories" SelectionChanged="lsvCategories_SelectionChanged">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
 
-                                <Grid Grid.Column="0">
-                                    <!--<Image Source="{Binding Foto, Converter={StaticResource ByteArrayToBitmapImageConverter}}"></Image>-->
-                                    <!--<Image Width="50" Height="50" Source="{Binding Foto, Converter={StaticResource ByteArrayToBitmapImageConverter}}"
-                                           Stretch="UniformToFill"></Image>-->
-                                    <Image Width="150" Height="150" Source="{Binding Foto}"
-                                           Stretch="UniformToFill"></Image>
-                                </Grid>
-
-                                <Grid Grid.Column="1">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="auto"></RowDefinition>
-                                        <RowDefinition Height="auto"></RowDefinition>
-                                        <RowDefinition></RowDefinition>
-                                    </Grid.RowDefinitions>
-
-                                    <TextBlock Grid.Row="0" Text="{Binding Nom}" FontSize="20" FontWeight="SemiBold" FontStyle="Italic"></TextBlock>
-                                    <StackPanel Grid.Row="1" Orientation="Vertical">
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Preu: " FontSize="16" Margin="5"></TextBlock>
-                                            <TextBlock Text="{Binding Preu}" FontSize="16" FontWeight="SemiBold" FontStyle="Italic" Margin="5"></TextBlock>
-                                            <TextBlock Text="€" FontSize="16" Margin="5"></TextBlock>
-                                        </StackPanel>
-
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="Disponible: " FontSize="16" Margin="5"></TextBlock>
-                                            <TextBlock Text="{Binding Disponible}" FontSize="16" FontWeight="SemiBold" Margin="5"></TextBlock>
-                                        </StackPanel>
-                                    </StackPanel>
-                                </Grid>
-
-                                <ScrollViewer Grid.Column="2">
-                                    <controls:MarkdownTextBlock Grid.Row="2" Text="{Binding DescripcioMD}"
-                                                                TextWrapping="WrapWholeWords"></controls:MarkdownTextBlock>
-                                </ScrollViewer>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-            
-            <!--<controls:DataGrid x:Name="dtgPlats" SelectionChanged="dtgPlats_SelectionChanged"
-                               AutoGenerateColumns="False" ColumnWidth="*">
-                <controls:DataGrid.Columns>
-                    <controls:DataGridTemplateColumn Header="FOTO">
-                        <controls:DataGridTemplateColumn.CellTemplate>
+                        <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Border>
-                                    <Image Width="40" Height="40" Stretch="Uniform" Source="{Binding Foto}"></Image>
+                                <Border CornerRadius="10" Background="BlanchedAlmond" Margin="10" Padding="5">
+                                    <Grid>
+                                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                            <TextBlock Text="~" FontSize="20" TextAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                                            <TextBlock Text="{Binding Nom}" HorizontalAlignment="Center" FontWeight="SemiBold" FontSize="20" TextAlignment="Center"></TextBlock>
+                                            <TextBlock Text="~" FontSize="20" TextAlignment="Center"></TextBlock>
+                                        </StackPanel>
+                                    </Grid>
                                 </Border>
                             </DataTemplate>
-                        </controls:DataGridTemplateColumn.CellTemplate>
-                    </controls:DataGridTemplateColumn>
-                    <controls:DataGridTextColumn Header="CODI" Binding="{Binding Codi}"></controls:DataGridTextColumn>
-                    <controls:DataGridTextColumn Header="NOM" Binding="{Binding Nom}" Width="2*"></controls:DataGridTextColumn>
-                    <controls:DataGridTemplateColumn Header="DESCRIPCIO_MD" Width="2*">
-                        <controls:DataGridTemplateColumn.CellTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="1" Grid.Column="1" Margin="5">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="PLATS" FontSize="20" HorizontalAlignment="Right" Margin="10 0"
+                       FontStyle="Italic" FontWeight="SemiBold" TextDecorations="Underline"></TextBlock>
+
+            <Border Grid.Row="1" Background="DarkGoldenrod" Margin="10">
+                <ScrollViewer Background="Bisque" Margin="5">
+                    <ListView x:Name="lsvPlats" SelectionChanged="lsvPlats_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                        <ListView.ItemTemplate>
                             <DataTemplate>
-                                <controls:MarkdownTextBlock Text="{Binding DescripcioMD}" TextWrapping="WrapWholeWords"></controls:MarkdownTextBlock>
+                                <Border Padding="10" Margin="0 10" BorderBrush="DarkGoldenrod" BorderThickness="2" Height="200" CornerRadius="10">
+                                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                                            <ColumnDefinition Width="1*"></ColumnDefinition>
+                                            <ColumnDefinition Width="2*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Grid Grid.Column="0" Background="BurlyWood">
+                                            <Image Width="200" Height="150" Source="{Binding Foto}"
+                                               Stretch="UniformToFill"></Image>
+                                        </Grid>
+
+                                        <Grid Grid.Column="1" Margin="20 0 0 0">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto"></RowDefinition>
+                                                <RowDefinition Height="auto"></RowDefinition>
+                                                <RowDefinition></RowDefinition>
+                                            </Grid.RowDefinitions>
+
+                                            <TextBlock Grid.Row="0" Text="{Binding Nom}" FontSize="20" FontWeight="SemiBold" FontStyle="Italic"></TextBlock>
+                                            <StackPanel Grid.Row="1" Orientation="Vertical">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Preu: " FontSize="16" Margin="5"></TextBlock>
+                                                    <TextBlock Text="{Binding Preu}" FontSize="16" FontWeight="SemiBold" FontStyle="Italic" Margin="5"></TextBlock>
+                                                    <TextBlock Text="€" FontSize="16" Margin="5"></TextBlock>
+                                                </StackPanel>
+
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Disponible: " FontSize="16" Margin="5"></TextBlock>
+                                                    <TextBlock Text="{Binding Disponible}" FontSize="16" FontWeight="SemiBold" Margin="5"></TextBlock>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <Border Grid.Column="2" BorderBrush="DarkGoldenrod" BorderThickness="2" CornerRadius="10">
+                                            <ScrollViewer>
+                                                <controls:MarkdownTextBlock Text="{Binding DescripcioMD}" Background="BlanchedAlmond"
+                                                                    TextWrapping="WrapWholeWords" FontSize="16" Padding="10"></controls:MarkdownTextBlock>
+                                            </ScrollViewer>
+                                        </Border>
+                                    </Grid>
+                                </Border>
                             </DataTemplate>
-                        </controls:DataGridTemplateColumn.CellTemplate>
-                    </controls:DataGridTemplateColumn>
-                    <controls:DataGridTextColumn Header="PREU" Binding="{Binding Preu}"></controls:DataGridTextColumn>
-                </controls:DataGrid.Columns>
-            </controls:DataGrid>-->
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </ScrollViewer>
+            </Border>
+            <CommandBar Grid.Row="2" OverflowButtonVisibility="Collapsed">
+                <AppBarButton x:Name="apbAdd" Click="apbAdd_Click" Icon="Add"></AppBarButton>
+                <AppBarButton x:Name="apbDelete" Click="apbDelete_Click" Icon="Delete"></AppBarButton>
+            </CommandBar>
+        </Grid>
 
-        </ScrollViewer>
 
-        <StackPanel Grid.Row="1" Grid.Column="0" Padding="10">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Margin="10 0">Nom del plat:</TextBlock>
-                <TextBox x:Name="txbFiltreNomPlat" Width="200"></TextBox>
-            </StackPanel>
+        <RelativePanel Grid.Row="2" Grid.Column="0" Padding="10" Background="Moccasin" BorderBrush="DarkGoldenrod" BorderThickness="0 0 1 0">
+            <Grid x:Name="grdFiltre"
+                  RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
 
-            <Button x:Name="btnMostrarPlats" Click="btnMostrarPlats_Click"
-                    Content="Filtrar plats" HorizontalAlignment="Stretch"></Button>
+                <TextBlock Grid.Column="0" Margin="10 0">Nom del plat:</TextBlock>
+                <TextBox Grid.Column="1" x:Name="txbFiltreNomPlat"></TextBox>
+                <Button Grid.Column="2" x:Name="btnMostrarPlats" Click="btnMostrarPlats_Click"
+                            Content="Filtrar plats" HorizontalAlignment="Stretch" Margin="10 0"></Button>
+            </Grid>
+
             <Button x:Name="btnNetejarSeleccio" Click="btnNetejarSeleccio_Click"
-                    Content="Netejar la selecció" HorizontalAlignment="Stretch"></Button>
-            <Button x:Name="btnEliminarPlat" Click="btnEliminarPlat_Click"
-                    Content="Eliminar plat" HorizontalAlignment="Stretch"></Button>
-            <Button x:Name="btnNouPlat" Click="btnNouPlat_Click"
-                    Content="Nou plat" HorizontalAlignment="Stretch"></Button>
-            <Button x:Name="btnObrirReport" Click="btnObrirReport_Click"
-                    Content="Imprimir informe de la carta" HorizontalAlignment="Stretch"></Button>
-            <Button x:Name="btnTancarReport" Click="btnTancarReport_Click"
-                    Content="Tancar finestra d'informes" HorizontalAlignment="Stretch"></Button>
-        </StackPanel>
+                    Content="Netejar la selecció" Margin="10"
+                    RelativePanel.Below="grdFiltre" RelativePanel.AlignHorizontalCenterWithPanel="True"></Button>
+
+            <Button x:Name="btnObrirReport" Click="btnObrirReport_Click" FontSize="20" FontWeight="SemiBold"
+                    RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignHorizontalCenterWithPanel="True">
+                <StackPanel>
+                    <FontIcon Glyph="&#xE9F9;" FontSize="40"></FontIcon>
+                    <TextBlock Text="Imprimeix la nostra carta!"></TextBlock>
+                </StackPanel>
+            </Button>
+        </RelativePanel>
 
         <!--<Button x:Name="btnEliminarPlat" Click="btnEliminarPlat_Click"
                     Content="Eliminar plat" HorizontalAlignment="Stretch"></Button>-->
 
-        <Grid Grid.Row="1" Grid.Column="1" Padding="10">
+        <Grid Grid.Row="2" Grid.Column="1" Padding="10" Margin="5">
             <Grid.RowDefinitions>
                 <RowDefinition></RowDefinition>
                 <RowDefinition></RowDefinition>
@@ -154,13 +190,16 @@
 
             <TextBlock x:Name="tbkNou" Grid.Row="0" Grid.Column="1" Text="Nou plat" FontSize="30" HorizontalAlignment="Center"></TextBlock>
 
-            <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="3">
-                <Image x:Name="imgPlatFoto" Width="150"></Image>
+            <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Background="BurlyWood" Margin="10">
+                <Image x:Name="imgPlatFoto"></Image>
                 <Button x:Name="btnPlatFoto" Click="btnPlatFoto_Click"
                         Content="Selecciona foto" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="20"></Button>
             </Grid>
 
-            <TextBox Grid.Row="1" Grid.Column="1" x:Name="txbPlatNom" VerticalAlignment="Center" PlaceholderText="Nom del plat" TextChanged="PlatModificat"></TextBox>
+            <StackPanel Grid.Row="1" Grid.Column="1">
+                <TextBlock Text="Nom del plat" FontWeight="SemiBold"></TextBlock>
+                <TextBox x:Name="txbPlatNom" VerticalAlignment="Center" PlaceholderText="Nom del plat" TextChanged="PlatModificat"></TextBox>
+            </StackPanel>
 
             <Grid Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>

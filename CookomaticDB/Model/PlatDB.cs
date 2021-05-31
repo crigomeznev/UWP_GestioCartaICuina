@@ -110,12 +110,13 @@ namespace CookomaticDB.Model
                                 //DBUtils.LlegeixFoto(reader, out foto_ba, "foto");
                                 //ImageConvertor ic = new ImageConvertor();
                                 //Image foto = ic.ConvertByteArrayToImage(foto_ba);
-
+                                // UNA SELECT A CATEGORIA PER CADA PLAT... INEFICIENT!
+                                CategoriaDB categoria = CategoriaDB.GetCategoriaPerCodi(reader.GetInt64(reader.GetOrdinal("categoria")));
 
                                 byte[] foto;
                                 DBUtils.LlegeixFoto(reader, out foto, "foto");
 
-                                PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, disponible, null, foto);
+                                PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, disponible, categoria, foto);
                                 //PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, null, disponible, null);
                                 plats.Add(plat);
                             }

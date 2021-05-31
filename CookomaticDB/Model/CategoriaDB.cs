@@ -83,5 +83,56 @@ namespace CookomaticDB.Model
             return null;
         }
 
+        public static CategoriaDB GetCategoriaPerCodi(long codi)
+        {
+            CategoriaDB categoria = null;
+            try
+            {
+                using (CookomaticDB context = new CookomaticDB())
+                {
+                    using (var connexio = context.Database.GetDbConnection())
+                    {
+                        connexio.Open();
+
+                        using (DbCommand consulta = connexio.CreateCommand())
+                        {
+                            // A) definir la consulta
+                            consulta.CommandText = "select * from categoria where codi = @codi";
+                            DBUtils.crearParametre(consulta, "codi", System.Data.DbType.Int64, codi);
+
+                            // B) llançar la consulta
+                            DbDataReader reader = consulta.ExecuteReader();
+
+                            if (reader.Read())
+                            {
+                                long codiCat = reader.GetInt64(reader.GetOrdinal("codi"));
+                                string nom = reader.GetString(reader.GetOrdinal("nom"));
+
+                                categoria = new CategoriaDB(codiCat, nom, Color.Red);
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // deixar missatge al log
+                Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.StackTrace);
+            }
+            return categoria;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is CategoriaDB dB &&
+                   codi == dB.codi &&
+                   Codi == dB.Codi;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(codi, Codi);
+        }
     }
 }
