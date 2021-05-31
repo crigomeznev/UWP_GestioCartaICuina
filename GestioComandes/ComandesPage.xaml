@@ -20,11 +20,14 @@
 
         <TextBlock Text="TAULA DE COMANDES" Grid.Row="0"></TextBlock>
 
-        <ListView x:Name="lsvComandes" Grid.Row="1" Background="Gray">
+        <ListView x:Name="lsvComandes" Grid.Row="1">
+            <ListView.Background>
+                <ImageBrush ImageSource="Assets/cork-board.jpg"></ImageBrush>
+            </ListView.Background>
             <!--fer listview horitzontal:-->
             <ListView.ItemsPanel>
                 <ItemsPanelTemplate>
-                    <ItemsStackPanel Orientation="Horizontal" VerticalAlignment="Top" Background="GreenYellow"></ItemsStackPanel>
+                    <ItemsStackPanel Orientation="Horizontal" VerticalAlignment="Top"></ItemsStackPanel>
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
 
@@ -37,170 +40,11 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <view:UIComanda PComandaVM="{Binding}"></view:UIComanda>
-                    
-                    <!--<Border Padding="10" BorderBrush="Gray" BorderThickness="1" VerticalAlignment="Top" Background="Orange">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"></RowDefinition>
-                                <RowDefinition Height="auto"></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                            </Grid.RowDefinitions>
-
-                            <TextBlock Text="COMANDA" Grid.Row="0"></TextBlock>
-
-                            <StackPanel Grid.Row="1" Orientation="Vertical" Padding="10">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Taula " FontSize="20"></TextBlock>
-                                    <TextBlock Text="{Binding Taula}" FontSize="20" FontWeight="Bold"></TextBlock>
-                                </StackPanel>
-                                <StackPanel Orientation="Vertical">
-                                    --><!-- todo converter perque nomes es vegi hora de comanda --><!--
-                                    <TextBlock Text="{Binding Data}"></TextBlock>
-                                    <TextBlock Text="{Binding Cambrer.Nom}"></TextBlock>
-                                </StackPanel>
-                            </StackPanel>
-
-
-                            --><!--línies de comanda--><!--
-
-                            <ListView ItemsSource="{Binding Linies}" Grid.Row="2" Background="Yellow" SelectionChanged="ListView_SelectionChanged">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="auto"></ColumnDefinition>
-                                                <ColumnDefinition Width="auto"></ColumnDefinition>
-                                                <ColumnDefinition></ColumnDefinition>
-                                                <ColumnDefinition></ColumnDefinition>
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBlock Text="{Binding Quantitat}" Grid.Column="0"></TextBlock>
-                                            <TextBlock Text="x" Grid.Column="1"></TextBlock>
-                                            <TextBlock Text="{Binding Item.Nom}" Grid.Column="2"></TextBlock>
-                                            <CheckBox Content="Estat" IsChecked="{Binding Estat, Converter={StaticResource EstatLiniaToBoolConverter}, Mode=TwoWay}"
-                                                      Grid.Column="3" Checked="CheckBox_Checked"></CheckBox>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                            
-                            --><!--<ListBox ItemsSource="{Binding Linies}" Grid.Row="2">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="auto"></ColumnDefinition>
-                                                <ColumnDefinition Width="auto"></ColumnDefinition>
-                                                <ColumnDefinition></ColumnDefinition>
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBlock Text="{Binding Quantitat}" Grid.Column="0"></TextBlock>
-                                            <TextBlock Text="x" Grid.Column="1"></TextBlock>
-                                            <TextBlock Text="{Binding Item.Nom}" Grid.Column="2"></TextBlock>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>--><!--
-
-                        </Grid>
-                    </Border>-->
-
-
-                    <!--<StackPanel Orientation="Vertical" Background="Orange" VerticalAlignment="Top">
-                            <TextBlock Text="COMANDA"></TextBlock>
-
-                            <StackPanel Orientation="Vertical">
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="Taula "></TextBlock>
-                                    <TextBlock Text="{Binding Taula}"></TextBlock>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Data}"></TextBlock>
-                                    <TextBlock Text="{Binding Cambrer.Nom}"></TextBlock>
-                                </StackPanel>
-                            </StackPanel>
-
-
-                            -->
-                    <!--línies de comanda-->
-                    <!--
-                            <ListBox ItemsSource="{Binding Linies}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="auto"></ColumnDefinition>
-                                                <ColumnDefinition Width="auto"></ColumnDefinition>
-                                                <ColumnDefinition></ColumnDefinition>
-                                            </Grid.ColumnDefinitions>
-
-                                            <TextBlock Text="{Binding Quantitat}" Grid.Column="0"></TextBlock>
-                                            <TextBlock Text="x" Grid.Column="1"></TextBlock>
-                                            <TextBlock Text="{Binding Plat.Nom}" Grid.Column="2"></TextBlock>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-
-                        </StackPanel>-->
-
                 </DataTemplate>
             </ListView.ItemTemplate>
 
 
 
         </ListView>
-
-        <!--<view:UIComanda x:Name="provaUIComanda" Grid.Row="2"></view:UIComanda>
-
-        <ScrollViewer  Grid.Row="3">
-            <StackPanel x:Name="stkComandesUI" Orientation="Horizontal"></StackPanel>
-            
-        </ScrollViewer>-->
-        
-        
-        <!--<StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Top">
-            <StackPanel Orientation="Vertical" Background="LightGray" VerticalAlignment="Top">
-                <TextBlock Text="COMANDA NO 1"></TextBlock>
-                <TextBlock Text="Data 2021-05-23"></TextBlock>
-                <TextBlock Text="Cambrer: Pepitu"></TextBlock>
-            </StackPanel>
-            <StackPanel Orientation="Vertical" Background="LightGray" VerticalAlignment="Top">
-                <TextBlock Text="COMANDA NO 1"></TextBlock>
-                <TextBlock Text="Data 2021-05-23"></TextBlock>
-                <TextBlock Text="Data 2021-05-23"></TextBlock>
-                <TextBlock Text="Data 2021-05-23"></TextBlock>
-                <TextBlock Text="Data 2021-05-23"></TextBlock>
-                <TextBlock Text="Data 2021-05-23"></TextBlock>
-                <TextBlock Text="Cambrer: Pepitu"></TextBlock>
-            </StackPanel>
-        </StackPanel>-->
-
-        <!--<ListView Grid.Row="1">
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    -->
-        <!--<ItemsStackPanel></ItemsStackPanel>-->
-        <!--
-
-                    <ItemsStackPanel Orientation="Horizontal" VerticalAlignment="Top" Background="GreenYellow"></ItemsStackPanel>
-
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Vertical" Background="LightGray">
-                        <TextBlock Text="COMANDA NO 1"></TextBlock>
-                        <TextBlock Text="Data 2021-05-23"></TextBlock>
-                        <TextBlock Text="Cambrer: Pepitu"></TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-
-            <ListViewItem></ListViewItem>
-            <ListViewItem></ListViewItem>
-        </ListView>-->
-
     </Grid>
 </Page>
