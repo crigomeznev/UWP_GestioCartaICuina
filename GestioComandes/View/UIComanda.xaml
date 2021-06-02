@@ -16,7 +16,6 @@
         <local:EstatLiniaToBoolConverter x:Key="EstatLiniaToBoolConverter"></local:EstatLiniaToBoolConverter>
     </UserControl.Resources>
 
-
     <Border Background="LightGray">
         <Grid Background="Beige" Margin="10">
             <Grid.RowDefinitions>
@@ -111,7 +110,7 @@
                     <controls:DataGrid.Columns>
                         <controls:DataGridTextColumn Header="Número" Binding="{Binding LiniaComandaOriginal.Num}" Width="SizeToCells"/>
                         <controls:DataGridTextColumn Header="Plat" Binding="{Binding LiniaComandaOriginal.Item.Nom}" Width="SizeToCells"/>
-                        <controls:DataGridTextColumn Header="Quantitat" Binding="{Binding LiniaComandaOriginal.Quantitat}" Width="SizeToCells"/>
+                        <controls:DataGridTextColumn Header="Qtat" Binding="{Binding LiniaComandaOriginal.Quantitat}" Width="SizeToCells"/>
                         <controls:DataGridTemplateColumn Header="Estat">
                             <controls:DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -121,18 +120,9 @@
                         </controls:DataGridTemplateColumn>
                     </controls:DataGrid.Columns>
                 </controls:DataGrid>
-
-                <!--<ListView ItemsSource="{Binding ElementName=ucComanda, Path=PComandaVM.Linies}" Grid.Row="1" x:Name="lsvLinies">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <local:UILiniaComanda PLiniaComandaVM="{Binding}"></local:UILiniaComanda>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>-->
-
             </Grid>
-
 
         </Grid>
     </Border>
+    
 </UserControl>

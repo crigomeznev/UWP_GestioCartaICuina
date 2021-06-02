@@ -12,8 +12,6 @@
      Background="AntiqueWhite"
     Loaded="Page_Loaded">
 
-    <!--Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"-->
-
     <UserControl.Resources>
         <view:BoolToDisponibleConverter x:Key="BoolToDisponibleConverter"></view:BoolToDisponibleConverter>
     </UserControl.Resources>

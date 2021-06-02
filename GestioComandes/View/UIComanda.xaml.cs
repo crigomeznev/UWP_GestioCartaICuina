@@ -27,15 +27,6 @@ namespace GestioComandes.View
         }
 
 
-
-        /*
-         * CODI
-        DATA
-        TAULA
-        CAMBRER
-        */
-
-
         #region PComandaVM
         public ComandaViewModel PComandaVM
         {
@@ -64,35 +55,6 @@ namespace GestioComandes.View
             }
         }
         #endregion
-
-
-
-        #region PComandaDB
-        //public ComandaDB PComandaDB
-        //{
-        //    get { return (ComandaDB)GetValue(PComandaDBProperty); }
-        //    set { SetValue(PComandaDBProperty, value); }
-        //}
-
-        //// Using a DependencyProperty as the backing store for PComandaDB.  This enables animation, styling, binding, etc...
-        //public static readonly DependencyProperty PComandaDBProperty =
-        //    DependencyProperty.Register("PComandaDB", typeof(ComandaDB), typeof(UIComanda), new PropertyMetadata(new ComandaDB(), PComandaDBChangedCallbackStatic));
-
-        //private static void PComandaDBChangedCallbackStatic(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        //{
-        //    UIComanda ui = (UIComanda)d;
-        //    ui.PComandaDBChangedCallback();
-        //}
-        //private void PComandaDBChangedCallback()
-        //{
-        //    PCodi = PComandaDB.Codi;
-        //    PData = PComandaDB.Data;
-        //    PTaula = PComandaDB.Taula;
-        //    PCambrer = PComandaDB.Cambrer;
-        //    PLinies = PComandaDB.Linies;
-        //}
-        #endregion
-
 
 
 
@@ -137,7 +99,7 @@ namespace GestioComandes.View
         #endregion
 
 
-        // TODO BORRAR
+        //TODO BORRAR
         #region PCambrer
         public CambrerDB PCambrer
         {
@@ -167,7 +129,6 @@ namespace GestioComandes.View
 
 
 
-
         #region PLiniesVM
         public ObservableCollection<LiniaComandaViewModel> PLiniesVM
         {
@@ -184,9 +145,6 @@ namespace GestioComandes.View
 
         private void btnFinalitzarComanda_Click(object sender, RoutedEventArgs e)
         {
-            //this.PComandaVM.Finalitzada = true;
-            //PComandaVM.Finalitzada = true;
-
             // Millorar:
             if (PComandaVM != null)
             {

@@ -14,7 +14,6 @@ namespace GestioComandes.View
 {
     public class LiniaComandaViewModel : INotifyPropertyChanged
     {
-        // INotifyPropertyChanged
         #region INotifyPropertyChanged
         public event PropertyChangedEventHandler PropertyChanged;
         public void RaisePropertyChange([CallerMemberName] string propertyname = null)
@@ -24,9 +23,7 @@ namespace GestioComandes.View
         #endregion
 
         private EstatLinia estat;
-
         private LiniaComandaDB liniaComandaOriginal;
-
 
         public LiniaComandaViewModel()
         {
@@ -48,9 +45,7 @@ namespace GestioComandes.View
                 estat = value;
                 // en principi, des del viewmodel només podem modificar l'estat de la línia
 
-
-                RaisePropertyChange(); // notifiquem canvi
-                //RaisePropertyChange("Estat");
+                RaisePropertyChange(); // notifiquem canvi, no serveix per a res
 
                 // Update BD
                 if (LiniaComandaOriginal != null)

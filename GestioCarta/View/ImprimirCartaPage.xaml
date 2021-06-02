@@ -22,7 +22,6 @@
                         RelativePanel.RightOf="txbURL" RelativePanel.AlignVerticalCenterWithPanel="True"></Button>
             </RelativePanel>
 
-            <!--<TextBlock Text="IMPRIMIR LA CARTA EN JASPERREPORTS" FontSize="70"></TextBlock>-->
             <WebView x:Name="wbvJasperReports" Grid.Row="1" Margin="10"
                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                  NavigationStarting="wbvJasperReports_NavigationStarting" NavigationCompleted="wbvJasperReports_NavigationCompleted"
