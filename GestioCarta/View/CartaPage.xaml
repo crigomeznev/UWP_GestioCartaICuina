@@ -15,222 +15,231 @@
     <!--Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"-->
 
     <UserControl.Resources>
-        <view:ByteArrayToBitmapImageConverter x:Key="ByteArrayToBitmapImageConverter"></view:ByteArrayToBitmapImageConverter>
+        <view:BoolToDisponibleConverter x:Key="BoolToDisponibleConverter"></view:BoolToDisponibleConverter>
     </UserControl.Resources>
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition Width="2*"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="1.5*"></RowDefinition>
-            <RowDefinition></RowDefinition>
-        </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="1.5*"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Restaurant &quot;El Bon Profit&quot;" FontSize="30" FontWeight="SemiBold" HorizontalAlignment="Center" Margin="10"></TextBlock>
 
-        <Border Grid.Row="1" Grid.Column="0" Background="Moccasin" BorderBrush="DarkGoldenrod" BorderThickness="0 1 1 0" CornerRadius="0 20 0 0">
-            <Grid>
+            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Margin="10" Text="Restaurant &quot;El Bon Profit&quot;"
+                       FontSize="40" FontWeight="SemiBold" FontStyle="Italic" HorizontalAlignment="Center" FontFamily="Georgia"></TextBlock>
+
+            <Border Grid.Row="1" Grid.Column="0" Background="Moccasin" BorderBrush="DarkGoldenrod" BorderThickness="0 1 1 0" CornerRadius="0 20 0 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="CATEGORIES" FontSize="20" HorizontalAlignment="Right" Margin="10"
+                            FontStyle="Italic" FontFamily="Georgia"></TextBlock>
+
+                    <Border Grid.Row="1" Background="BurlyWood" Margin="10" CornerRadius="10">
+                        <ListView x:Name="lsvCategories" SelectionChanged="lsvCategories_SelectionChanged">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border CornerRadius="10" Background="BlanchedAlmond" Margin="10" Padding="5">
+                                        <Grid>
+                                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                                <TextBlock Text="~" FontSize="20" TextAlignment="Center" HorizontalAlignment="Center" ></TextBlock>
+                                                <TextBlock Text="{Binding Nom}" HorizontalAlignment="Center" TextAlignment="Center"
+                                                           FontWeight="SemiBold" FontSize="20" ></TextBlock>
+                                                <TextBlock Text="~" FontSize="20" TextAlignment="Center" ></TextBlock>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" Grid.Column="1" Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"></RowDefinition>
                     <RowDefinition></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="CATEGORIES" FontSize="20" HorizontalAlignment="Right" Margin="10 0"
-                        FontStyle="Italic" FontWeight="SemiBold" TextDecorations="Underline"></TextBlock>
+                <TextBlock Grid.Row="0" Text="PLATS" FontSize="20" HorizontalAlignment="Right" Margin="10 0"
+                           FontStyle="Italic" FontFamily="Georgia"></TextBlock>
 
-                <Border Grid.Row="1" Background="BurlyWood" Margin="10" CornerRadius="10">
-                    <ListView x:Name="lsvCategories" SelectionChanged="lsvCategories_SelectionChanged">
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            </Style>
-                        </ListView.ItemContainerStyle>
+                <Border Grid.Row="1" Background="DarkGoldenrod" Margin="10">
+                    <ScrollViewer Background="Bisque" Margin="5">
+                        <ListView x:Name="lsvPlats" SelectionChanged="lsvPlats_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
+                                </Style>
+                            </ListView.ItemContainerStyle>
 
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Border CornerRadius="10" Background="BlanchedAlmond" Margin="10" Padding="5">
-                                    <Grid>
-                                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                            <TextBlock Text="~" FontSize="20" TextAlignment="Center" HorizontalAlignment="Center"></TextBlock>
-                                            <TextBlock Text="{Binding Nom}" HorizontalAlignment="Center" FontWeight="SemiBold" FontSize="20" TextAlignment="Center"></TextBlock>
-                                            <TextBlock Text="~" FontSize="20" TextAlignment="Center"></TextBlock>
-                                        </StackPanel>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Padding="10" Margin="0 10" BorderBrush="DarkGoldenrod" BorderThickness="2" Height="200" CornerRadius="10">
+                                        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="1*"></ColumnDefinition>
+                                                <ColumnDefinition Width="1*"></ColumnDefinition>
+                                                <ColumnDefinition Width="2*"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+
+                                            <Grid Grid.Column="0" Background="BurlyWood">
+                                                <Image Width="200" Height="150" Source="{Binding Foto}"
+                                                   Stretch="UniformToFill"></Image>
+                                            </Grid>
+
+                                            <Grid Grid.Column="1" Margin="20 0 0 0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="auto"></RowDefinition>
+                                                    <RowDefinition Height="auto"></RowDefinition>
+                                                    <RowDefinition></RowDefinition>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Grid.Row="0" Text="{Binding Nom}" FontSize="20" FontWeight="SemiBold" FontStyle="Italic" TextDecorations="Underline"></TextBlock>
+                                                <StackPanel Grid.Row="1" Orientation="Vertical">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="Preu: " FontSize="16" Margin="5" ></TextBlock>
+                                                        <TextBlock Text="{Binding Preu}" Margin="5"
+                                                                   FontSize="16" FontWeight="SemiBold" FontStyle="Italic" ></TextBlock>
+                                                        <TextBlock Text="€" FontSize="16" FontStyle="Italic" Margin="5"></TextBlock>
+                                                    </StackPanel>
+
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <!--<TextBlock Text="Disponible: " FontSize="16"  Margin="5"></TextBlock>-->
+                                                        <TextBlock Text="{Binding Disponible, Converter={StaticResource BoolToDisponibleConverter}}" FontSize="16" Margin="5"></TextBlock>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
+
+                                            <Border Grid.Column="2" BorderBrush="DarkGoldenrod" BorderThickness="2" CornerRadius="10">
+                                                <ScrollViewer>
+                                                    <controls:MarkdownTextBlock Text="{Binding DescripcioMD}" Background="BlanchedAlmond"
+                                                                        TextWrapping="WrapWholeWords" FontSize="16" Padding="10" ></controls:MarkdownTextBlock>
+                                                </ScrollViewer>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </ScrollViewer>
                 </Border>
+                <CommandBar Grid.Row="2" OverflowButtonVisibility="Collapsed">
+                    <AppBarButton x:Name="apbAdd" Click="apbAdd_Click" Icon="Add"></AppBarButton>
+                    <AppBarButton x:Name="apbDelete" Click="apbDelete_Click" Icon="Delete"></AppBarButton>
+                </CommandBar>
             </Grid>
-        </Border>
-
-        <Grid Grid.Row="1" Grid.Column="1" Margin="5">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition Height="auto"></RowDefinition>
-            </Grid.RowDefinitions>
-
-            <TextBlock Grid.Row="0" Text="PLATS" FontSize="20" HorizontalAlignment="Right" Margin="10 0"
-                       FontStyle="Italic" FontWeight="SemiBold" TextDecorations="Underline"></TextBlock>
-
-            <Border Grid.Row="1" Background="DarkGoldenrod" Margin="10">
-                <ScrollViewer Background="Bisque" Margin="5">
-                    <ListView x:Name="lsvPlats" SelectionChanged="lsvPlats_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="ListViewItem">
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch"></Setter>
-                            </Style>
-                        </ListView.ItemContainerStyle>
-
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <Border Padding="10" Margin="0 10" BorderBrush="DarkGoldenrod" BorderThickness="2" Height="200" CornerRadius="10">
-                                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="1*"></ColumnDefinition>
-                                            <ColumnDefinition Width="1*"></ColumnDefinition>
-                                            <ColumnDefinition Width="2*"></ColumnDefinition>
-                                        </Grid.ColumnDefinitions>
-
-                                        <Grid Grid.Column="0" Background="BurlyWood">
-                                            <Image Width="200" Height="150" Source="{Binding Foto}"
-                                               Stretch="UniformToFill"></Image>
-                                        </Grid>
-
-                                        <Grid Grid.Column="1" Margin="20 0 0 0">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="auto"></RowDefinition>
-                                                <RowDefinition Height="auto"></RowDefinition>
-                                                <RowDefinition></RowDefinition>
-                                            </Grid.RowDefinitions>
-
-                                            <TextBlock Grid.Row="0" Text="{Binding Nom}" FontSize="20" FontWeight="SemiBold" FontStyle="Italic"></TextBlock>
-                                            <StackPanel Grid.Row="1" Orientation="Vertical">
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Preu: " FontSize="16" Margin="5"></TextBlock>
-                                                    <TextBlock Text="{Binding Preu}" FontSize="16" FontWeight="SemiBold" FontStyle="Italic" Margin="5"></TextBlock>
-                                                    <TextBlock Text="€" FontSize="16" Margin="5"></TextBlock>
-                                                </StackPanel>
-
-                                                <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Text="Disponible: " FontSize="16" Margin="5"></TextBlock>
-                                                    <TextBlock Text="{Binding Disponible}" FontSize="16" FontWeight="SemiBold" Margin="5"></TextBlock>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </Grid>
-
-                                        <Border Grid.Column="2" BorderBrush="DarkGoldenrod" BorderThickness="2" CornerRadius="10">
-                                            <ScrollViewer>
-                                                <controls:MarkdownTextBlock Text="{Binding DescripcioMD}" Background="BlanchedAlmond"
-                                                                    TextWrapping="WrapWholeWords" FontSize="16" Padding="10"></controls:MarkdownTextBlock>
-                                            </ScrollViewer>
-                                        </Border>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-                </ScrollViewer>
-            </Border>
-            <CommandBar Grid.Row="2" OverflowButtonVisibility="Collapsed">
-                <AppBarButton x:Name="apbAdd" Click="apbAdd_Click" Icon="Add"></AppBarButton>
-                <AppBarButton x:Name="apbDelete" Click="apbDelete_Click" Icon="Delete"></AppBarButton>
-            </CommandBar>
-        </Grid>
 
 
-        <RelativePanel Grid.Row="2" Grid.Column="0" Padding="10" Background="Moccasin" BorderBrush="DarkGoldenrod" BorderThickness="0 0 1 0">
-            <Grid x:Name="grdFiltre"
-                  RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+            <RelativePanel Grid.Row="2" Grid.Column="0" Padding="10" Background="Moccasin" BorderBrush="DarkGoldenrod" BorderThickness="0 0 1 0">
+                <Grid x:Name="grdFiltre"
+                      RelativePanel.AlignTopWithPanel="True" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Margin="10 0"  VerticalAlignment="Center">Nom del plat:</TextBlock>
+                    <TextBox Grid.Column="1" x:Name="txbFiltreNomPlat" ></TextBox>
+                    <Button Grid.Column="2" x:Name="btnMostrarPlats" Click="btnMostrarPlats_Click" 
+                                Content="Filtrar plats" HorizontalAlignment="Stretch" Margin="10 0"></Button>
+                </Grid>
+
+                <Button x:Name="btnNetejarSeleccio" Click="btnNetejarSeleccio_Click"
+                        Content="Netejar la selecció" Margin="10" 
+                        RelativePanel.Below="grdFiltre" RelativePanel.AlignHorizontalCenterWithPanel="True"></Button>
+
+                <Button x:Name="btnObrirReport" Click="btnObrirReport_Click" FontSize="20" FontWeight="SemiBold"
+                        RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignHorizontalCenterWithPanel="True">
+                    <StackPanel>
+                        <FontIcon Glyph="&#xE9F9;" FontSize="40"></FontIcon>
+                        <TextBlock Text="Imprimeix la nostra carta!"></TextBlock>
+                    </StackPanel>
+                </Button>
+            </RelativePanel>
+
+            <!--<Button x:Name="btnEliminarPlat" Click="btnEliminarPlat_Click"
+                        Content="Eliminar plat" HorizontalAlignment="Stretch"></Button>-->
+
+            <Grid Grid.Row="2" Grid.Column="1" Padding="10" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition Width="auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Margin="10 0">Nom del plat:</TextBlock>
-                <TextBox Grid.Column="1" x:Name="txbFiltreNomPlat"></TextBox>
-                <Button Grid.Column="2" x:Name="btnMostrarPlats" Click="btnMostrarPlats_Click"
-                            Content="Filtrar plats" HorizontalAlignment="Stretch" Margin="10 0"></Button>
-            </Grid>
+                <TextBlock x:Name="tbkNou" Grid.Row="0" Grid.Column="1" Text="Nou plat" FontSize="30" HorizontalAlignment="Center"
+                           FontWeight="SemiBold" FontFamily="Georgia"></TextBlock>
 
-            <Button x:Name="btnNetejarSeleccio" Click="btnNetejarSeleccio_Click"
-                    Content="Netejar la selecció" Margin="10"
-                    RelativePanel.Below="grdFiltre" RelativePanel.AlignHorizontalCenterWithPanel="True"></Button>
+                <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Background="BurlyWood" Margin="10">
+                    <Image x:Name="imgPlatFoto"></Image>
+                    <Button x:Name="btnPlatFoto" Click="btnPlatFoto_Click" 
+                            Content="Selecciona foto" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="20"></Button>
+                </Grid>
 
-            <Button x:Name="btnObrirReport" Click="btnObrirReport_Click" FontSize="20" FontWeight="SemiBold"
-                    RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignHorizontalCenterWithPanel="True">
-                <StackPanel>
-                    <FontIcon Glyph="&#xE9F9;" FontSize="40"></FontIcon>
-                    <TextBlock Text="Imprimeix la nostra carta!"></TextBlock>
+                <StackPanel Grid.Row="1" Grid.Column="1">
+                    <TextBlock Text="Nom del plat" FontWeight="SemiBold" ></TextBlock>
+                    <TextBox x:Name="txbPlatNom" VerticalAlignment="Center" PlaceholderText="Nom del plat" TextChanged="PlatModificat" ></TextBox>
                 </StackPanel>
-            </Button>
-        </RelativePanel>
 
-        <!--<Button x:Name="btnEliminarPlat" Click="btnEliminarPlat_Click"
-                    Content="Eliminar plat" HorizontalAlignment="Stretch"></Button>-->
+                <Grid Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                        <ColumnDefinition Width="1*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <!-- TODO: fer preu amb numericupdown -->
+                    <!--<muxc:NumberBox Value="{x:Bind Path=ViewModel.NumberBoxValue, Mode=TwoWay}"
+                        SmallChange="10"
+                        LargeChange="100"
+                        SpinButtonPlacementMode="Compact" />-->
 
-        <Grid Grid.Row="2" Grid.Column="1" Padding="10" Margin="5">
-            <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition></ColumnDefinition>
-            </Grid.ColumnDefinitions>
+                    <muxc:NumberBox x:Name="nbbPlatPreu" Grid.Column="0" HorizontalAlignment="Center" 
+                                    Header="Preu:" PlaceholderText="10,00" ValidationMode="InvalidInputOverwritten" Value="10.00"
+                                    SmallChange="0.25" LargeChange="1" SpinButtonPlacementMode="Inline"/>
 
-            <TextBlock x:Name="tbkNou" Grid.Row="0" Grid.Column="1" Text="Nou plat" FontSize="30" HorizontalAlignment="Center"></TextBlock>
+                    <CheckBox x:Name="chkDisponible" Content="Disponible" Grid.Column="1" HorizontalAlignment="Center" Checked="PlatModificat"
+                              RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignRightWith="nbbPlatPreu" ></CheckBox>
+                </Grid>
 
-            <Grid Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Background="BurlyWood" Margin="10">
-                <Image x:Name="imgPlatFoto"></Image>
-                <Button x:Name="btnPlatFoto" Click="btnPlatFoto_Click"
-                        Content="Selecciona foto" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="20"></Button>
+                <ScrollViewer Grid.Row="3" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2">
+                    <TextBox x:Name="txbPlatDescripcio" TextWrapping="Wrap" AcceptsReturn="True" TextChanged="PlatModificat"
+                             PlaceholderText="Descripció del plat..." ></TextBox>
+                </ScrollViewer>
+
+                <Button x:Name="btnInserirPlat" Click="btnInserirPlat_Click" Grid.Row="4" Grid.Column="1" Visibility="Collapsed"
+                        Content="Inserir nou plat" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Button>
+                <Button x:Name="btnActualitzarPlat" Click="btnActualitzarPlat_Click" Grid.Row="4" Grid.Column="1" Visibility="Collapsed"
+                        Content="Actualitzar nou plat" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Button>
+
             </Grid>
-
-            <StackPanel Grid.Row="1" Grid.Column="1">
-                <TextBlock Text="Nom del plat" FontWeight="SemiBold"></TextBlock>
-                <TextBox x:Name="txbPlatNom" VerticalAlignment="Center" PlaceholderText="Nom del plat" TextChanged="PlatModificat"></TextBox>
-            </StackPanel>
-
-            <Grid Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1*"></ColumnDefinition>
-                    <ColumnDefinition Width="1*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <!-- TODO: fer preu amb numericupdown -->
-                <!--<muxc:NumberBox Value="{x:Bind Path=ViewModel.NumberBoxValue, Mode=TwoWay}"
-                    SmallChange="10"
-                    LargeChange="100"
-                    SpinButtonPlacementMode="Compact" />-->
-
-                <muxc:NumberBox x:Name="nbbPlatPreu" Grid.Column="0" HorizontalAlignment="Center"
-                                Header="Preu:" PlaceholderText="10,00" ValidationMode="InvalidInputOverwritten" Value="10.00"
-                                SmallChange="0.25" LargeChange="1" SpinButtonPlacementMode="Inline"/>
-
-                <CheckBox x:Name="chkDisponible" Content="Disponible" Grid.Column="1" HorizontalAlignment="Center" Checked="PlatModificat"
-                          RelativePanel.AlignHorizontalCenterWithPanel="True" RelativePanel.AlignRightWith="nbbPlatPreu"></CheckBox>
-            </Grid>
-
-            <ScrollViewer Grid.Row="3" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2">
-                <TextBox x:Name="txbPlatDescripcio" TextWrapping="Wrap" AcceptsReturn="True" TextChanged="PlatModificat"
-                         PlaceholderText="Descripció del plat..."></TextBox>
-            </ScrollViewer>
-
-            <Button x:Name="btnInserirPlat" Click="btnInserirPlat_Click" Grid.Row="4" Grid.Column="1" Visibility="Collapsed"
-                    Content="Inserir nou plat" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Button>
-            <Button x:Name="btnActualitzarPlat" Click="btnActualitzarPlat_Click" Grid.Row="4" Grid.Column="1" Visibility="Collapsed"
-                    Content="Actualitzar nou plat" HorizontalAlignment="Right" VerticalAlignment="Bottom"></Button>
 
         </Grid>
 
+        <ProgressRing x:Name="ctlProgress" Height="200" Width="200" Foreground="Red" IsActive="False"></ProgressRing>
     </Grid>
 </Page>

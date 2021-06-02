@@ -71,6 +71,7 @@ namespace GestioCarta.View
             get => nom;
             set 
             {
+                if (value == null || ((string)value).Length == 0) value = "Sense nom";
                 nom = value;
                 if (platOriginal!=null)
                     platOriginal.Nom = value;
@@ -90,7 +91,7 @@ namespace GestioCarta.View
         {
             get => preu;
             set 
-            { 
+            {
                 preu = value;
                 if (platOriginal != null)
                     platOriginal.Preu = value;

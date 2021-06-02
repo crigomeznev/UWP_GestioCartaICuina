@@ -41,6 +41,8 @@ namespace GestioCarta.View
         private ObservableCollection<PlatViewModel> llistaPlatsVM = new ObservableCollection<PlatViewModel>();
         private ObservableCollection<PlatViewModel> llistaPlatsVMFiltrats = new ObservableCollection<PlatViewModel>();
 
+        private const long CATTOTES = 0;
+
         //private PlatDB selectedPlat;
         private PlatViewModel selectedPlat;
         public PlatViewModel SelectedPlat
@@ -139,14 +141,9 @@ namespace GestioCarta.View
         }
         private void SetNumberBoxNumberFormatter()
         {
-            //IncrementNumberRounder rounder = new IncrementNumberRounder();
-            //rounder.Increment = 0.25;
-            //rounder.RoundingAlgorithm = RoundingAlgorithm.RoundUp;
-
             DecimalFormatter formatter = new DecimalFormatter();
             formatter.IntegerDigits = 1;
             formatter.FractionDigits = 2;
-            //formatter.NumberRounder = rounder;
             nbbPlatPreu.NumberFormatter = formatter;
         }
 
@@ -167,9 +164,13 @@ namespace GestioCarta.View
                 CarregarPlatsVM();
 
                 lsvCategories.ItemsSource = llistaCategories;
+                // afegim botó per veure totes les categories
+                CategoriaDB cat = new CategoriaDB(CATTOTES, "Totes", System.Drawing.Color.White);
+                llistaCategories.Add(cat);
+
                 lsvPlats.ItemsSource = llistaPlatsVMFiltrats;
 
-                Estat = EstatView.CONSULTA;
+                Estat = EstatView.NOU;
             }
             catch (Exception ex)
             {
@@ -212,17 +213,12 @@ namespace GestioCarta.View
             }
         }
 
-        private PlatViewModel CarregarPlatVM(PlatDB platDB)
-        {
-            return new PlatViewModel(platDB);
-        }
-
         private void FiltrarPerCategoria(CategoriaDB categoria)
         {
             llistaPlatsVMFiltrats.Clear();
             foreach (PlatViewModel plat in llistaPlatsVM)
             {
-                if (plat.PlatOriginal.Categoria.Equals(categoria))
+                if (plat.PlatOriginal.Categoria.Equals(categoria) || categoria.Codi== CATTOTES)
                 {
                     llistaPlatsVMFiltrats.Add(plat);
                 }
@@ -240,7 +236,8 @@ namespace GestioCarta.View
             foreach (PlatViewModel plat in llistaPlatsVM)
             {
                 if (plat.PlatOriginal.Nom.ToUpper().Contains(nom.ToUpper()) &&
-                    (categoriaSeleccionada == null || plat.PlatOriginal.Categoria.Equals(categoriaSeleccionada)))
+                    ((categoriaSeleccionada == null || categoriaSeleccionada.Codi==CATTOTES)
+                    || plat.PlatOriginal.Categoria.Equals(categoriaSeleccionada)))
                 {
                     llistaPlatsVMFiltrats.Add(plat);
                 }
@@ -255,9 +252,6 @@ namespace GestioCarta.View
             string nomFiltre = txbFiltreNomPlat.Text;
 
             FiltrarPerNom(nomFiltre);
-
-            // netegem seleccio
-            //NetejarSeleccio();
         }
 
         private void lsvCategories_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -283,23 +277,7 @@ namespace GestioCarta.View
         //private async void lsvPlats_SelectionChanged(object sender, SelectionChangedEventArgs e)
         private void lsvPlats_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //if (lsvPlats.SelectedValue != null)
-            //{
-                //// UI
-                //Estat = EstatView.MODIFICACIO;
-
-                SelectedPlat = (PlatViewModel)lsvPlats.SelectedItem;
-            //}
-            //else
-            //{
-                // UI
-
-                // Com que listview de plats no tindrà cap plat seleccionat, estat del view: NOU
-            //    Estat = EstatView.NOU;
-
-            //    //btnInserirPlat.Visibility = Visibility.Visible;
-            //}
-
+            SelectedPlat = (PlatViewModel)lsvPlats.SelectedItem;
         }
 
 
@@ -321,6 +299,7 @@ namespace GestioCarta.View
         // UPDATE
         private void btnActualitzarPlat_Click(object sender, RoutedEventArgs e)
         {
+            ctlProgress.IsEnabled = true;
             SelectedPlat.Nom = txbPlatNom.Text;
             SelectedPlat.DescripcioMD = txbPlatDescripcio.Text;
             SelectedPlat.Preu = Convert.ToDecimal(nbbPlatPreu.Value);
@@ -334,6 +313,7 @@ namespace GestioCarta.View
             //lsvPlats.ItemsSource = llistaPlatsVM;
             SelectedPlat = null;
             lsvCategories.SelectedValue = null;
+            ctlProgress.IsEnabled = false;
         }
 
         // INSERT
@@ -341,34 +321,55 @@ namespace GestioCarta.View
         {
             //PlatDB nouPlat;
             PlatViewModel nouPlat;
+            CategoriaDB catSeleccionada = (CategoriaDB)lsvCategories.SelectedValue;
 
-            if (lsvCategories.SelectedValue == null)
+            // Comprovacions
+            if (catSeleccionada == null || catSeleccionada.Codi == CATTOTES)
             {
                 var dialog = new MessageDialog("Selecciona una categoria", "Avís");
                 await dialog.ShowAsync();
                 return;
             }
+            if (txbPlatNom.Text == null || txbPlatNom.Text.Length==0)
+            {
+                var dialog = new MessageDialog("El nom del plat és obligatori", "Avís");
+                await dialog.ShowAsync();
+                return;
+            }
 
             // Inserir nou plat
-            nouPlat = new PlatViewModel();
-            nouPlat.PlatOriginal = new PlatDB();
-            nouPlat.Nom = txbPlatNom.Text;
-            nouPlat.DescripcioMD = txbPlatDescripcio.Text;
-            Decimal preu = Convert.ToDecimal(nbbPlatPreu.Value);
-            nouPlat.Preu = preu;
-            nouPlat.FotoBa = selectedPhotoBa;
-            nouPlat.Disponible = chkDisponible.IsEnabled ? true : false;
-            nouPlat.PlatOriginal.Categoria = (CategoriaDB)lsvCategories.SelectedValue;
-            nouPlat.PlatOriginal.Insert();
+            ctlProgress.IsEnabled = true;
+            try
+            {
+                nouPlat = new PlatViewModel();
+                nouPlat.PlatOriginal = new PlatDB();
+                nouPlat.Nom = txbPlatNom.Text;
+                nouPlat.DescripcioMD = txbPlatDescripcio.Text;
+                Decimal preu = Convert.ToDecimal(nbbPlatPreu.Value);
+                nouPlat.Preu = preu;
+                nouPlat.FotoBa = selectedPhotoBa;
+                nouPlat.Disponible = chkDisponible.IsChecked.Value ? true : false;
+                nouPlat.PlatOriginal.Categoria = (CategoriaDB)lsvCategories.SelectedValue;
 
-            CarregarPlatsDB();
-            CarregarPlatsVM();
+                nouPlat.PlatOriginal.Insert();
 
-            // Tornar a estat modificació:
-            Estat = EstatView.CONSULTA;
-            SelectedPlat = null;
-            lsvCategories.SelectedValue = null;
-            netejarForm();
+                CarregarPlatsDB();
+                CarregarPlatsVM();
+
+                // Tornar a estat modificació:
+                Estat = EstatView.CONSULTA;
+                SelectedPlat = null;
+                lsvCategories.SelectedValue = null;
+                netejarForm();
+            } catch (Exception ex)
+            {
+                var dialog = new MessageDialog("Error: "+ex.Message, "Error");
+                await dialog.ShowAsync();
+                return;
+            }
+            finally {
+                ctlProgress.IsEnabled = false;
+            }
         }
 
         // Formulari per nou plat
@@ -384,22 +385,31 @@ namespace GestioCarta.View
             {
                 PlatDB p = SelectedPlat.PlatOriginal;
 
+                ctlProgress.IsEnabled = true;
                 int liniesImplicades = LiniaComandaDB.GetNumLiniesPerPlat(p);
 
                 if (liniesImplicades == 0)
                 {
-                    // podem eliminar plat
-                    p.Delete();
-                    // actualitzar taula
-                    CarregarPlatsDB();
-                    CarregarPlatsVM();
-                    NetejarSeleccio();
+                    try
+                    {
+                        // podem eliminar plat
+                        p.Delete();
+                        // actualitzar taula
+                        CarregarPlatsDB();
+                        CarregarPlatsVM();
+                        NetejarSeleccio();
+                    } catch(Exception ex)
+                    {
+                        var dialog = new MessageDialog("Error: "+ex.Message, "Error");
+                        await dialog.ShowAsync();
+                    }
                 }
                 else
                 {
                     var dialog = new MessageDialog("No es pot eliminar plat. Hi ha línies de comanda relacionades", "Error");
                     await dialog.ShowAsync();
                 }
+                ctlProgress.IsEnabled = false;
             }
         }
 
@@ -474,30 +484,38 @@ namespace GestioCarta.View
         // Obrir finestra amb webview a jasperreports
         private async void btnObrirReport_Click(object sender, RoutedEventArgs e)
         {
+            AppWindow appWindow = null;
+
             // Create a new window.
-            AppWindow appWindow = await AppWindow.TryCreateAsync();
-
-            // Create a Frame and navigate to the Page you want to show in the new window.
-            Frame appWindowContentFrame = new Frame();
-            appWindowContentFrame.Navigate(typeof(ImprimirCartaPage));
-
-            // Attach the XAML content to the window.
-            ElementCompositionPreview.SetAppWindowContent(appWindow, appWindowContentFrame);
-
-            // Add the new page to the Dictionary using the UIContext as the Key.
-            AppWindows.Add(appWindowContentFrame.UIContext, appWindow);
-            appWindow.Title = "App Window " + AppWindows.Count.ToString();
-
-            // When the window is closed, be sure to release
-            // XAML resources and the reference to the window.
-            appWindow.Closed += delegate
+            if (AppWindows.Count==0)
             {
-                Debug.WriteLine("TANCANT FINESTRA REPORTS");
-                CartaPage.AppWindows.Remove(appWindowContentFrame.UIContext);
-                appWindowContentFrame.Content = null;
-                appWindow = null;
-            };
+                appWindow = await AppWindow.TryCreateAsync();
 
+                // Create a Frame and navigate to the Page you want to show in the new window.
+                Frame appWindowContentFrame = new Frame();
+                appWindowContentFrame.Navigate(typeof(ImprimirCartaPage));
+
+                // Attach the XAML content to the window.
+                ElementCompositionPreview.SetAppWindowContent(appWindow, appWindowContentFrame);
+
+                // Add the new page to the Dictionary using the UIContext as the Key.
+                AppWindows.Add(appWindowContentFrame.UIContext, appWindow);
+                appWindow.Title = "App Window " + AppWindows.Count.ToString();
+
+                // When the window is closed, be sure to release
+                // XAML resources and the reference to the window.
+                appWindow.Closed += delegate
+                {
+                    Debug.WriteLine("TANCANT FINESTRA REPORTS");
+                    CartaPage.AppWindows.Remove(appWindowContentFrame.UIContext);
+                    appWindowContentFrame.Content = null;
+                    appWindow = null;
+                };
+            }
+            else
+            {
+                appWindow = AppWindows.Values.First();
+            }
             // Show the window.
             await appWindow.TryShowAsync();
         }

@@ -368,6 +368,7 @@ namespace CookomaticDB.Model
             {
                 // Deixar registre al log (coming soon)
                 Debug.WriteLine(ex);
+                throw new Exception(ex.Message, ex.InnerException);
             }
 
             return false;
