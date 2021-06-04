@@ -21,7 +21,6 @@ namespace GestioCarta.View
         private string descripcioMD;
         private decimal preu;
         private bool disponible;
-        //private CategoriaDB categoria;
         private byte[] fotoBa;
         private BitmapImage foto;
         private PlatDB platOriginal;
@@ -150,7 +149,6 @@ namespace GestioCarta.View
             byte[] buffer = null;
             using (MemoryStream ms = new MemoryStream())
             {
-                //WriteableBitmap wb = new WriteableBitmap(imageSource);
                 WriteableBitmap wb = new WriteableBitmap(imageSource.PixelWidth, imageSource.PixelHeight);
                 Stream s1 = wb.PixelBuffer.AsStream();
                 s1.CopyTo(ms);
@@ -172,22 +170,6 @@ namespace GestioCarta.View
             return image;
         }
 
-        //public static async Task<BitmapImage> ImageFromBytes(Byte[] bytes)
-        //{
-        //    BitmapImage image = new BitmapImage();
-        //    WriteableBitmap writeableBitmap;
-        //    using (InMemoryRandomAccessStream stream = new InMemoryRandomAccessStream())
-        //    {
-        //        writeableBitmap = StreamToWriteableBitmap(stream);
-
-        //        //await stream.WriteAsync(bytes.AsBuffer());
-        //        //stream.Seek(0);
-        //        //await image.SetSourceAsync(stream);
-        //    }
-        //    image = (BitmapImage)writeableBitmap;
-        //    return image;
-        //}
-
 
         public static WriteableBitmap StreamToWriteableBitmap(IRandomAccessStream stream)
         {
@@ -206,51 +188,5 @@ namespace GestioCarta.View
         }
 
 
-        //public BitmapImage Convert(WriteableBitmap wb)
-        //{
-        //    EditableImage imageData = new EditableImage(wb.PixelWidth, wb.PixelHeight);
-
-        //    for (int y = 0; y < wb.PixelHeight; ++y)
-        //    {
-        //        for (int x = 0; x < wb.PixelWidth; ++x)
-        //        {
-        //            int pixel = wb.Pixels[wb.PixelWidth * y + x];
-        //            imageData.SetPixel(x, y,
-        //            (byte)((pixel >> 16) & 0xFF),
-        //            (byte)((pixel >> 8) & 0xFF),
-        //            (byte)(pixel & 0xFF), (byte)((pixel >> 24) & 0xFF)
-        //            );
-        //        }
-        //    }
-
-        //    MemoryStream pngStream = imageData.GetStream();
-
-        //    BitmapImage bi = new BitmapImage();
-        //    bi.SetSource(pngStream);
-
-        //    return bi;
-        //}
-
-
-        //public async Task<Image> ConvertBitmapToXamarinImage(WriteableBitmap bitmap)
-        //{
-        //    byte[] pixels;
-
-        //    using (var stream = bitmap.PixelBuffer.AsStream())
-        //    {
-        //        pixels = new byte[(uint)stream.Length];
-        //        await stream.ReadAsync(pixels, 0, pixels.Length);
-        //    }
-
-        //    var raStream = new InMemoryRandomAccessStream();
-
-        //    // Encode pixels into stream
-        //    var encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.PngEncoderId, raStream);
-        //    encoder.SetPixelData(BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied, (uint)bitmap.PixelWidth, (uint)bitmap.PixelHeight, 96, 96, pixels);
-        //    await encoder.FlushAsync();
-
-        //    return new Image() { Source = ImageSource.FromStream(() => raStream.AsStreamForRead()) };
-
-        //}
     }
 }

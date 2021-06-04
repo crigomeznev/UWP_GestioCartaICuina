@@ -16,11 +16,9 @@ namespace CookomaticDB.Model
         private string nom;
         private string descripcioMD;
         private decimal preu;
-        //private Image foto2;
         private bool disponible;
         private CategoriaDB categoria;
         private byte[] foto;
-        //private BitmapImage fotoBi;
 
         public PlatDB(long codi, string nom, string descripcioMD, decimal preu, bool disponible, CategoriaDB categoria, byte[] foto)
         {
@@ -33,29 +31,6 @@ namespace CookomaticDB.Model
             Foto = foto;
         }
 
-
-        //public PlatDB(long codi, string nom, string descripcioMD, decimal preu, BitmapImage foto, bool disponible, CategoriaDB categoria)
-        //{
-        //    Codi = codi;
-        //    Nom = nom;
-        //    DescripcioMD = descripcioMD;
-        //    Preu = preu;
-        //    FotoBi = foto;
-        //    Disponible = disponible;
-        //    Categoria = categoria;
-        //}
-
-        //public PlatDB(long codi, string nom, string descripcioMD, decimal preu, Image foto2, bool disponible, CategoriaDB categoria)
-        //{
-        //    Codi = codi;
-        //    Nom = nom;
-        //    DescripcioMD = descripcioMD;
-        //    Preu = preu;
-        //    Foto2 = foto2;
-        //    Disponible = disponible;
-        //    Categoria = categoria;
-        //}
-
         public PlatDB()
         {
         }
@@ -67,10 +42,6 @@ namespace CookomaticDB.Model
         public bool Disponible { get => disponible; set => disponible = value; }
         public CategoriaDB Categoria { get => categoria; set => categoria = value; }
         public byte[] Foto { get => foto; set => foto = value; }
-        //public BitmapImage FotoBi { get => fotoBi; set => fotoBi = value; }
-
-        //private List<LiniaEscandall> escandall;
-
 
 
         public static ObservableCollection<PlatDB> GetPlats()
@@ -105,19 +76,12 @@ namespace CookomaticDB.Model
                                 decimal preu = reader.GetDecimal(reader.GetOrdinal("preu"));
                                 bool disponible = reader.GetBoolean(reader.GetOrdinal("disponible"));
 
-                                // TODO: agafar foto de la bd
-                                //byte[] foto_ba;
-                                //DBUtils.LlegeixFoto(reader, out foto_ba, "foto");
-                                //ImageConvertor ic = new ImageConvertor();
-                                //Image foto = ic.ConvertByteArrayToImage(foto_ba);
-                                // UNA SELECT A CATEGORIA PER CADA PLAT... INEFICIENT!
                                 CategoriaDB categoria = CategoriaDB.GetCategoriaPerCodi(reader.GetInt64(reader.GetOrdinal("categoria")));
 
                                 byte[] foto;
                                 DBUtils.LlegeixFoto(reader, out foto, "foto");
 
                                 PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, disponible, categoria, foto);
-                                //PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, null, disponible, null);
                                 plats.Add(plat);
                             }
                             return plats;
@@ -238,7 +202,6 @@ namespace CookomaticDB.Model
                                 DBUtils.LlegeixFoto(reader, out foto, "foto");
 
                                 PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, disponible, null, foto);
-                                //PlatDB plat = new PlatDB(codi, nom, descripcioMD, preu, null, disponible, null);
                                 plats.Add(plat);
                             }
                             return plats;
@@ -287,13 +250,6 @@ namespace CookomaticDB.Model
 
                                 decimal preu = reader.GetDecimal(reader.GetOrdinal("preu"));
                                 bool disponible = reader.GetBoolean(reader.GetOrdinal("disponible"));
-
-                                // TODO: agafar foto de la bd
-                                //byte[] foto_ba;
-                                //DBUtils.LlegeixFoto(reader, out foto_ba, "foto");
-                                //ImageConvertor ic = new ImageConvertor();
-                                //Image foto = ic.ConvertByteArrayToImage(foto_ba);
-
 
                                 byte[] foto;
                                 DBUtils.LlegeixFoto(reader, out foto, "foto");
@@ -344,7 +300,6 @@ namespace CookomaticDB.Model
                             DBUtils.crearParametre(consulta, "nom", System.Data.DbType.String, this.Nom);
                             DBUtils.crearParametre(consulta, "descripcioMD", System.Data.DbType.String, this.DescripcioMD);
                             DBUtils.crearParametre(consulta, "preu", System.Data.DbType.Decimal, this.Preu);
-                            //DBUtils.crearParametre(consulta, "foto", System.Data.DbType.Object, this.FotoBi);
                             DBUtils.crearParametre(consulta, "foto", System.Data.DbType.Binary, this.Foto);
                             DBUtils.crearParametre(consulta, "disponible", System.Data.DbType.Boolean, this.Disponible);
                             DBUtils.crearParametre(consulta, "categoria", System.Data.DbType.Int64, this.Categoria.Codi);

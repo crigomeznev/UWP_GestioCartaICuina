@@ -23,21 +23,6 @@ namespace CookomaticDB.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        // HAURIA D'ANAR EN UN VIEWMODEL!!!
-        // Ens registrem  a l'event property changed 
-        // Si l'objecte Actor és modificat (via binding de la interfície
-        // gràfica ), ens avisarà.
-        //    Actor.PropertyChanged += Actor_PropertyChanged;
-        //    }
-
-        //private void Actor_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        //{
-        //    if (EstatForm == Estat.SENSE_CANVIS)
-        //    {
-        //        EstatForm = Estat.MODIFICAT;
-        //    }
-        //}
-
         public ComandaDB()
         {
         }
@@ -48,11 +33,8 @@ namespace CookomaticDB.Model
             Data = data;
             Taula = taula;
             Cambrer = cambrer;
-            //Linies = linies;
             this.linies = linies;
             this.finalitzada = finalitzada;
-
-            //this.linies.property
         }
 
         public long Codi { get => codi; set => codi = value; }
@@ -77,10 +59,12 @@ namespace CookomaticDB.Model
             {
                 yield return linia;
             }
-            //yield return default(LiniaComandaDB);
         }
         public ObservableCollection<LiniaComandaDB> Linies { get => linies; set => linies = value; }
         public bool Finalitzada { get => finalitzada; set => finalitzada = value; }
+
+
+
 
         public static ObservableCollection<ComandaDB> GetComandes()
         {
@@ -113,7 +97,6 @@ namespace CookomaticDB.Model
                                 CambrerDB cambrer = CambrerDB.GetCambrerPerCodi(codiCambrer);
 
                                 bool finalitzada = reader.GetBoolean(reader.GetOrdinal("finalitzada"));
-
 
                                 // POC EFICIENT: Obrim una nova connexió a la bd per anar a buscar el cambrer!
                                 //ObservableCollection<LiniaComandaDB> linies = LiniaComandaDB.GetLiniesPerCodiComanda(codi);

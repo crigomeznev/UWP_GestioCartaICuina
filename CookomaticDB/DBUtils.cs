@@ -29,11 +29,7 @@ namespace CookomaticDB
             if (!reader.IsDBNull(ordinal))
             {
                 Type t = reader.GetFieldType(reader.GetOrdinal(nomColumna));
-                //byte[] buffer = new byte[50000];
                 valor = (byte[])reader.GetValue(ordinal);
-
-                //long l = reader.GetBytes(ordinal,0,valor,0,50000);
-                //valor = BitConverter.GetBytes(l);
             }
         }
 
@@ -41,31 +37,15 @@ namespace CookomaticDB
 
 
         // TODO: moure a imageconvertor
-        public static Image ConvertByteArrayToImage(byte[] byteArrayIn)
-        {
-            using (MemoryStream ms = new MemoryStream(byteArrayIn))
-            {
-                return Image.FromStream(ms);
-            }
-        }
-
-
-        //public static Image ByteArrayToImage(byte[] bytes)
+        //public static Image ConvertByteArrayToImage(byte[] byteArrayIn)
         //{
-        //    //var obj = new ImageConvertor();
-        //    //System.Drawing.Bitmap bmpPostedImage =
-        //    //    new System.Drawing.Bitmap(FileUploadControl.PostedFile.InputStream);
-        //    //byte[] imageByteArray = obj.ConvertImageToByteArray(bmpPostedImage, ".png");
-
-
-        //    Image imageIn = ImageConvertor.ConvertByteArrayToImage(bytes);
-
-        //    return imageIn;
-        //    //string saveImagePath = Server.MapPath("~/images/") + "Image1.png";
-        //    //File.WriteAllBytes(saveImagePath, imageByteArray);
-        //    //StatusLabel.Text = "Upload status: File uploaded!'";
-        //    //StatusLabel.ForeColor = Color.Red;
+        //    using (MemoryStream ms = new MemoryStream(byteArrayIn))
+        //    {
+        //        return Image.FromStream(ms);
+        //    }
         //}
+
+
 
 
 

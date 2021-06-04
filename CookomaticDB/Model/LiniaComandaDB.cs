@@ -85,21 +85,7 @@ namespace CookomaticDB.Model
                                 int qtatAux = reader.GetInt32(reader.GetOrdinal("qtat"));
                                 string estatAux = reader.GetString(reader.GetOrdinal("estat"));
 
-                                /*
-                                var list = new List<YourEnumType>();
-
-                                var field = reader["DBFieldName"] != DBNull.Value ? reader["DBFieldName"].ToString()
-                                                                                   : "";
-                                var myField = (YourEnumType)Enum.Parse(typeof(YourEnumType), field);
-                                */
                                 var estat = (EstatLinia)Enum.Parse(typeof(EstatLinia), estatAux);
-                                // TODO: agafar foto de la bd
-                                //BitmapImage foto;
-
-                                //if (!reader.IsDBNull(reader.GetOrdinal("image_path")))
-                                //    image_path = reader.GetString(reader.GetOrdinal("image_path"));
-
-                                // TODO: afegir ref a comanda
                                 LiniaComandaDB linia = new LiniaComandaDB(numAux, qtatAux, estat, null, null);
                                 linies.Add(linia);
                             }
